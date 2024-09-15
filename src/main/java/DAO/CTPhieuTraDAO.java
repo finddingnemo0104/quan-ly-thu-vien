@@ -79,7 +79,7 @@ public class CTPhieuTraDAO {
     public static Map<CTPhieuTraDTO, SachDTO> findManyJoinSach(int idPhieuTra) throws Exception {
         Connection con = MyConnection.getConnection();
         String queryFindAll = "" +
-                "SELECT idSach, idPhieuTra, CT_PHIEU_TRA.soLuong as soLuongTra, trangThaiSach, id, tenSach, giaSach, S.soLuong as soLuongSach, trangThai, idTacGia, idNhaXuatBan, idLoaiSach, idKho \n" +
+                "SELECT idSach, idPhieuTra, CT_PHIEU_TRA.soLuong as soLuongTra, trangThaiSach, id, tenSach, giaSach, S.soLuong as soLuongSach, trangThai, idTacGia, idNhaXuatBan, idLoaiSach \n" +
                 "FROM " + TABLE_NAME + "\n" +
                 "INNER JOIN SACH S on CT_PHIEU_TRA.idSach = S.id \n" +
                 "WHERE idPhieuTra = ?";
@@ -102,8 +102,7 @@ public class CTPhieuTraDAO {
                     rs.getInt("trangThai"),
                     rs.getInt("idTacGia"),
                     rs.getInt("idNhaXuatBan"),
-                    rs.getInt("idLoaiSach"),
-                    rs.getInt("idKho")
+                    rs.getInt("idLoaiSach")
             );
             listCTPhieuTraVaSach.put(ctPhieuTraDTO, sachDTO);
         }

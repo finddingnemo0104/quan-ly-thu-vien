@@ -211,26 +211,28 @@ public class NhanVienGUI extends javax.swing.JPanel {
         jLabel6.setText("Địa chỉ:");
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        jLabel7.setText("Số CCCD:");
+        jLabel7.setText("CCCD:");
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         jLabel8.setText("Vai trò");
 
-        jTxtDiachi.setText("nhập địa chỉ");
         jTxtDiachi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTxtDiachiActionPerformed(evt);
             }
         });
 
-        jTxtHoten.setText("nhập họ tên");
         jTxtHoten.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTxtHotenActionPerformed(evt);
             }
         });
 
-        jTxtCmnd.setText("nhập số cmnd");
+        jTxtCmnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTxtCmndActionPerformed(evt);
+            }
+        });
 
         jBtnXacNhanThem.setBackground(new java.awt.Color(102, 255, 51));
         jBtnXacNhanThem.setText("THÊM");
@@ -280,7 +282,7 @@ public class NhanVienGUI extends javax.swing.JPanel {
                                     .addComponent(jTxtDiachi, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JDialogThemLayout.createSequentialGroup()
                             .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                             .addComponent(jTxtNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JDialogThemLayout.createSequentialGroup()
                             .addComponent(jLabel8)
@@ -513,8 +515,6 @@ public class NhanVienGUI extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
         jBtnThem.setText("THÊM");
         jBtnThem.setPreferredSize(new java.awt.Dimension(80, 23));
         jBtnThem.addActionListener(new java.awt.event.ActionListener() {
@@ -619,8 +619,7 @@ public class NhanVienGUI extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -812,6 +811,10 @@ public class NhanVienGUI extends javax.swing.JPanel {
     private void jTxtMatKhauSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtMatKhauSuaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTxtMatKhauSuaActionPerformed
+
+    private void jTxtCmndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtCmndActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTxtCmndActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -401,7 +401,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
 
         jLabel19.setText("Địa chỉ");
 
-        jLabel20.setText("CMND");
+        jLabel20.setText("CCCD");
 
         btnXacNhanThem.setText("Thêm");
         btnXacNhanThem.addActionListener(new java.awt.event.ActionListener() {

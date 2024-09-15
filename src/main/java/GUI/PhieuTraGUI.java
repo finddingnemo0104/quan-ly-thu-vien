@@ -43,6 +43,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
      */
     private DefaultTableModel phieuTraModel;
     private PhieuTraDTO phieuTraDTOCanThem;
+    private PhieuMuonDTO phieuMuonDTO;
 
     public PhieuTraGUI() {
         initComponents();
@@ -571,23 +572,26 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                .addGap(49, 49, 49)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(622, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+                .addGap(37, 37, 37))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(87, 87, 87)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
-                    .addContainerGap()))
+                    .addContainerGap(674, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -655,6 +659,8 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             float giaSach = (float) jTableXacNhanCTPhieuTra.getValueAt(row, 5);
             // Tính tiền phạt
             tienPhat += (soLuongMuon - soLuongTra) * giaSach;
+            int soNgayTre = (int) (LocalDate.now().toEpochDay() - phieuMuonDTO.getNgay_Tra().toLocalDate().toEpochDay());
+            tienPhat += soNgayTre * 0.1 * giaSach * (soLuongMuon - soLuongTra);
 
             CTPhieuTraDTO ctPhieuTraDTO = new CTPhieuTraDTO(idSach, idPhieuTra, soLuongTra, tinhTrang);
             phieuTraDTOCanThem.getListCTPhieuTra().add(ctPhieuTraDTO);
@@ -717,6 +723,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         phieuTraDTOCanThem = new PhieuTraDTO(idPhieuTra, nguoiDocDTOCanThem.getId(), LocalDate.now(), 0);
         // Get phieu muon join sach
         CTPhieuMuonBUS ctPhieuMuonBUS = new CTPhieuMuonBUS();
+        phieuMuonDTO = phieuMuonBUS.findOne(idPhieuMuon);
         Map<CTPhieuMuonDTO, SachDTO> listCTPhieuMuonVaSach = ctPhieuMuonBUS.findManyJoinSach(idPhieuMuon);
         // insert into table
         DefaultTableModel xacNhanCTPhieuTraModel = (DefaultTableModel) jTableXacNhanCTPhieuTra.getModel();
