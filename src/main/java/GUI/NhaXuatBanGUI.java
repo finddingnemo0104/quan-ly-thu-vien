@@ -107,9 +107,19 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "SDT chi duoc nhap so");
             return false;
         }
+        // Kiểm tra số điện thoại có đúng 10 hoặc 11 số không
+        if (sdt.length() != 10 && sdt.length() != 11) {
+            JOptionPane.showMessageDialog(this, "SDT phải có 10 hoặc 11 số");
+            return false;
+        }
 
         if (isEmptyString(email)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập Email");
+            return false;
+        }
+
+        if (!Helpler.isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Email không đúng định dạng");
             return false;
         }
 
@@ -549,7 +559,7 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
         nguoiDocDTO.setSdt(sdt);
         //Update record to database
         if (nguoiDocBus.updateOne(nguoiDocDTO)) {
-            System.out.println("Sua thanh cong");
+            JOptionPane.showMessageDialog(this, "Sửa thành công");
         } else {
             System.out.println("Sua that bai");
         }
@@ -565,6 +575,7 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
             return;
         }
         int id = (int) jTableNguoiDoc.getValueAt(selectedRow, 0);
+
         // count all sach with idLoaiSach = id
         int countSach = new SachBUS().countSachByIdNhaXuatBan(id);
 
@@ -572,16 +583,26 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
         String name = (String) jTableNguoiDoc.getValueAt(selectedRow, 1);
         if (countSach > 0) {
             int dialogResult = JOptionPane.showConfirmDialog(this, "Nhà xuất bản '" + name + "' đang có " + countSach + " quyển sách trong cơ sở dữ liệu.\nBạn có muốn xóa nhà xuất bản \"" + name +  "\" không?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-            if (dialogResult == JOptionPane.NO_OPTION) {
+            // Check if the dialog was closed or NO was selected
+            if (dialogResult == JOptionPane.NO_OPTION || dialogResult == JOptionPane.CLOSED_OPTION || dialogResult == JOptionPane.CANCEL_OPTION) {
                 return;
             }
         }
+
         NhaXuatBanBUS nhaXuatBanBUS = new NhaXuatBanBUS();
+        NhaXuatBanDTO nhaXuatBanDTO = nhaXuatBanBUS.findOne(id);
+
+        if (!Helpler.showConfirmDialog(this,
+                String.format("Bạn có chắc chắn muốn xoá nhà xuất bản '%s' không?", nhaXuatBanDTO.getTen()), "Xoá nhà xuất bản")) {
+            return;
+        }
+
         if (!nhaXuatBanBUS.deleteOne(id)) {
             JOptionPane.showMessageDialog(this, "Xóa thất bại");
             return;
         }
         setTableItemList();
+        JOptionPane.showMessageDialog(this, "Xoá thành công");
     }//GEN-LAST:event_btnXoaActionPerformed
 
     public String getSelectedButtonText(ButtonGroup buttonGroup) {
@@ -640,6 +661,8 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
         setTableItemList();
         clearAllTextField();
         jDialogThem.setVisible(false);
+        JOptionPane.showMessageDialog(this, "Thêm thành công");
+
     }//GEN-LAST:event_btnXacNhanThemActionPerformed
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed

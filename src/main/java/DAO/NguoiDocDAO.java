@@ -23,7 +23,7 @@ public class NguoiDocDAO {
         NguoiDocDTO nguoiDocDTO = null;
         try {
             nguoiDocDTO = new NguoiDocDTO(
-                    rs.getInt("id"),
+                    rs.getLong("id"),
                     rs.getString("sdt"),
                     rs.getDate("ngaySinh").toLocalDate(),
                     rs.getString("diaChi"),
@@ -48,7 +48,7 @@ public class NguoiDocDAO {
             Date hanSuDung = Date.valueOf(nguoiDoc.getHanSuDung());
 
             PreparedStatement prest = con.prepareStatement(queryInsert);
-            prest.setInt(1, nguoiDoc.getId());
+            prest.setLong(1, nguoiDoc.getId());
             prest.setString(2, nguoiDoc.getSdt());
             prest.setDate(3, ngaySinh);
             prest.setString(4, nguoiDoc.getDiaChi());
@@ -76,7 +76,7 @@ public class NguoiDocDAO {
                 Date ngaySinh = Date.valueOf(nguoiDocDTO.getNgaySinh());
                 Date hanSuDung = Date.valueOf(nguoiDocDTO.getHanSuDung());
                 try {
-                    prest.setInt(1, idNguoiDoc.getAndIncrement());
+                    prest.setLong(1, idNguoiDoc.getAndIncrement());
                     prest.setString(2, nguoiDocDTO.getSdt());
                     prest.setDate(3, ngaySinh);
                     prest.setString(4, nguoiDocDTO.getDiaChi());
@@ -112,7 +112,7 @@ public class NguoiDocDAO {
             ResultSet rs = st.executeQuery(queryFindAll);
             while (rs.next()) {
                 NguoiDocDTO nguoiDocDTO = new NguoiDocDTO(
-                        rs.getInt("id"),
+                        rs.getLong("id"),
                         rs.getString("sdt"),
                         rs.getDate("ngaySinh").toLocalDate(),
                         rs.getString("diaChi"),
@@ -131,14 +131,14 @@ public class NguoiDocDAO {
         return listNguoiDoc;
     }
 
-    public NguoiDocDTO findOne(int id) {
+    public NguoiDocDTO findOne(long id) {
         NguoiDocDTO nguoiDocDTO = null;
         try {
             Connection con = MyConnection.getConnection();
 
             String queryFindOne = "SELECT * FROM NGUOI_DOC WHERE id = ?";
             PreparedStatement prest = con.prepareStatement(queryFindOne);
-            prest.setInt(1, id);
+            prest.setLong(1, id);
             ResultSet rs = prest.executeQuery();
             if (rs.next()) {
                 nguoiDocDTO = resultSetToNguoiDocDTO(rs);
@@ -150,7 +150,7 @@ public class NguoiDocDAO {
         return nguoiDocDTO;
     }
 
-    public ArrayList<NguoiDocDTO> findMany(String hoTenTimKiem, boolean quaHanSuDung, int trangThai) {
+    public ArrayList<NguoiDocDTO> findMany(long id, String hoTenTimKiem, boolean quaHanSuDung, int trangThai) {
         ArrayList<NguoiDocDTO> listResult = null;
         try {
             Connection con = MyConnection.getConnection();
@@ -159,8 +159,12 @@ public class NguoiDocDAO {
                     "FROM NGUOI_DOC " +
                     "WHERE ";
             ArrayList<String> queries = new ArrayList<>();
+            if (id != -1) {
+                queries.add(String.format("id = %s\n", id));
+            }
+
             if (!hoTenTimKiem.equalsIgnoreCase("")) {
-                queries.add(String.format("hoTen LIKE '%%%s%%'\n", hoTenTimKiem));
+                queries.add(String.format("hoTen LIKE N'%%%s%%'\n", hoTenTimKiem));
             }
             if (quaHanSuDung) {
                 queries.add("hanSuDung <= CAST( GETDATE() AS Date )\n");
@@ -209,7 +213,7 @@ public class NguoiDocDAO {
             prest.setDate(6, hanSuDung);
             prest.setInt(7, nguoiDocDTO.getSoLuongMuonChoPhep());
             prest.setInt(8, NguoiDocDTO.TrangThaiViPham.valueOf(nguoiDocDTO.getTrangThaiViPham().name()).ordinal());
-            prest.setInt(9, nguoiDocDTO.getId());
+            prest.setLong(9, nguoiDocDTO.getId());
             int count = prest.executeUpdate();
             con.close();
             return count != 0;
@@ -219,12 +223,12 @@ public class NguoiDocDAO {
         return false;
     }
 
-    public boolean deleteOne(int id) {
+    public boolean deleteOne(long id) {
         try {
             Connection con = MyConnection.getConnection();
             String queryDeleteOne = "DELETE FROM NGUOI_DOC WHERE id = ?";
             PreparedStatement prest = con.prepareStatement(queryDeleteOne);
-            prest.setInt(1, id);
+            prest.setLong(1, id);
             int count = prest.executeUpdate();
             con.close();
             return count != 0;

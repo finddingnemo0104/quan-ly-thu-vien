@@ -1,7 +1,6 @@
 package DAO;
 
 import DTO.CTPhieuMuonDTO;
-import DTO.CTPhieuTraDTO;
 import DTO.SachDTO;
 
 import java.sql.*;

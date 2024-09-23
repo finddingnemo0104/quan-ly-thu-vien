@@ -13,20 +13,18 @@ import java.time.format.DateTimeFormatter;
 public class NguoiDocDTO {
     public enum TrangThaiViPham {
         KHONG_VI_PHAM,
-        VI_PHAM,
-        BI_KHOA;
+        VI_PHAM;
 
         @Override
         public String toString() {
             return switch (this) {
                 case KHONG_VI_PHAM -> "Không vi phạm";
                 case VI_PHAM -> "Vi phạm";
-                case BI_KHOA -> "Bị khóa";
             };
         }
     }
 
-    private int id;
+    private long id;
     private String sdt;
     private LocalDate ngaySinh;
     private String diaChi;
@@ -41,7 +39,7 @@ public class NguoiDocDTO {
 
     ;
 
-    public NguoiDocDTO(int id, String sdt, LocalDate ngaySinh, String diaChi, String hoTen, String CCCD, LocalDate hanSuDung, int soLuongMuonChoPhep, int trangThaiViPham) {
+    public NguoiDocDTO(long id, String sdt, LocalDate ngaySinh, String diaChi, String hoTen, String CCCD, LocalDate hanSuDung, int soLuongMuonChoPhep, int trangThaiViPham) {
         this.id = id;
         this.sdt = sdt;
         this.ngaySinh = ngaySinh;
@@ -76,11 +74,11 @@ public class NguoiDocDTO {
         return false;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

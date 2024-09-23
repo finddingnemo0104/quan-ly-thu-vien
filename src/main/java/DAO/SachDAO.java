@@ -38,7 +38,7 @@ public class SachDAO {
         return sachDTO;  
     }
     
-    public boolean insertone (SachDTO sach)
+    public boolean insertone(SachDTO sach)
     {
         Connection con = null;
         try{
@@ -81,6 +81,41 @@ public class SachDAO {
                     rs.getInt("idTacGia"),
                     rs.getInt("idNhaXuatBan"),
                     rs.getInt("idLoaiSach")
+                );
+                listSach.add(sach);
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listSach;
+    }
+
+    // find all SachDTO then join with TacGiaDTO, NhaXuatBanDTO
+    public ArrayList<SachDTO> findAllJoinTacGiaNhaXuatBan() {
+        ArrayList<SachDTO> listSach = new ArrayList<>();
+        try {
+            Connection con = MyConnection.getConnection();
+            String query = ""
+                    // select please use as name
+                    + " SELECT SACH.id, tenSach, giaSach, soluong, trangthai, idTacGia, idNhaXuatBan, idLoaiSach, TAC_GIA.hoTen as tenTacGia, NHA_XUAT_BAN.ten as tenNhaXuatBan"
+                    + " FROM SACH "
+                    + " JOIN TAC_GIA ON SACH.idTacGia = TAC_GIA.id "
+                    + " JOIN NHA_XUAT_BAN ON SACH.idNhaXuatBan = NHA_XUAT_BAN.id ";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                SachDTO sach = new SachDTO(
+                        rs.getInt("id"),
+                        rs.getString("tenSach"),
+                        rs.getFloat("giaSach"),
+                        rs.getInt("soluong"),
+                        rs.getInt("trangthai"),
+                        rs.getInt("idTacGia"),
+                        rs.getInt("idNhaXuatBan"),
+                        rs.getInt("idLoaiSach"),
+                        rs.getString("tenTacGia"),
+                        rs.getString("tenNhaXuatBan")
                 );
                 listSach.add(sach);
             }
@@ -150,7 +185,7 @@ public class SachDAO {
         return false;
     }
     
-    public ArrayList<SachDTO> findMany(int id, String timTenSach, int timLoaiSach) {
+    public ArrayList<SachDTO> findMany(int id, String timTenSach, int timLoaiSach, int giaSachFrom, int giaSachTo) {
         ArrayList<SachDTO> listResult = null;
         try {
             Connection con = MyConnection.getConnection();
@@ -163,10 +198,16 @@ public class SachDAO {
                 queries.add(String.format("id = %d \n", id));
             }
             if (!timTenSach.equalsIgnoreCase("")) {
-                queries.add(String.format("tenSach LIKE '%%%s%%'\n", timTenSach));
+                queries.add(String.format("tenSach LIKE N'%%%s%%'\n", timTenSach));
             }
             if (timLoaiSach != -1) {
                 queries.add(String.format("idLoaiSach = %d\n", timLoaiSach));
+            }
+            if (giaSachFrom != -1) {
+                queries.add(String.format("giaSach >= %d \n", giaSachFrom));
+            }
+            if (giaSachTo != -1) {
+                queries.add(String.format("giaSach <= %d \n", giaSachTo));
             }
             for (int i = 0; i < queries.size(); i++) {
                 if (i + 1 < queries.size()) {

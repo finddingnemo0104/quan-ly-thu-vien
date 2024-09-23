@@ -61,7 +61,16 @@ public class PhieuMuonBUS {
         return null;
     }
 
-    public ArrayList<PhieuMuonDTO> findMany(int id, int idNguoiDoc, int idNhanVien, java.util.Date ngayMuonFrom, java.util.Date ngayMuonTo, java.util.Date ngayTraFrom, java.util.Date ngayTraTo) {
+    public ArrayList<PhieuMuonDTO> findByIdNguoiDoc(long idNguoiDoc) {
+        try {
+            return PhieuMuonDAO.findByIdNguoiDoc(idNguoiDoc);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<PhieuMuonDTO> findMany(int id, long idNguoiDoc, int idNhanVien, java.util.Date ngayMuonFrom, java.util.Date ngayMuonTo, java.util.Date ngayTraFrom, java.util.Date ngayTraTo) {
         try {
             return PhieuMuonDAO.findMany(id, idNguoiDoc, idNhanVien, ngayMuonFrom, ngayMuonTo, ngayTraFrom, ngayTraTo);
         } catch (Exception e) {

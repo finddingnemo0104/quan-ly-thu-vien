@@ -16,22 +16,17 @@ import java.util.logging.Logger;
  * @author pc
  */
 public class MyConnection {
-    // Why my connection is so slow ?
-    // Because you are using a local server, and the server is not optimized for speed.
-    // You can try to use a remote server, or use a different server.
-    // You can also try to use a different database, or use a different database.
-    // Can you optimize my connection by code?
-    // Yes, you can optimize your connection by code.
-    // Let do it
-    
+    private static Connection con = null;
     public static Connection getConnection() throws Exception {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        String dbUrl = "jdbc:sqlserver://localhost:1433;"
-                + "databaseName=QuanLyThuVien;"
-                + "encrypt=true; trustServerCertificate=true;";
-        String username = "sa";
-        String password = "khongrotmon";
-        Connection con = DriverManager.getConnection(dbUrl, username, password);
+        if (con == null || con.isClosed()) {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String dbUrl = "jdbc:sqlserver://localhost:1433;"
+                    + "databaseName=QuanLyThuVien;"
+                    + "encrypt=true; trustServerCertificate=true;";
+            String username = "sa";
+            String password = "khongrotmon";
+            con = DriverManager.getConnection(dbUrl, username, password);
+        }
         return con;
     }
 

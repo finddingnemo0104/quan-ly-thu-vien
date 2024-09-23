@@ -1,7 +1,5 @@
 package DAO;
 
-import DTO.NhaXuatBanDTO;
-import DTO.SachDTO;
 import DTO.TacGiaDTO;
 
 import java.sql.*;

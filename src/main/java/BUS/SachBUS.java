@@ -35,11 +35,7 @@ public class SachBUS {
     }
     
     public void findAll(){
-        listSach = sachDAO.findAll();
-        listSach.forEach((sach) -> {
-            sach.setTacGia(tacGiaDAO.findOne(sach.getIdTacGia()));
-            sach.setNhaXuatBan(nhaXuatBanDAO.findOne(sach.getIdNhaXuatBan()));
-        });
+        listSach = sachDAO.findAllJoinTacGiaNhaXuatBan();
     }
     
     public SachDTO findone(int id){
@@ -58,8 +54,8 @@ public class SachBUS {
         return sachDAO.delete(id);
     }
     
-    public void findMany (int id, String timTenSach, int timLoaiSach){
-        listSach = sachDAO.findMany(id, timTenSach, timLoaiSach);
+    public void findMany (int id, String timTenSach, int timLoaiSach, int giaSachFrom, int giaSachTo){
+        listSach = sachDAO.findMany(id, timTenSach, timLoaiSach, giaSachFrom, giaSachTo);
         listSach.forEach((sach) -> {
             sach.setTacGia(tacGiaDAO.findOne(sach.getIdTacGia()));
             sach.setNhaXuatBan(nhaXuatBanDAO.findOne(sach.getIdNhaXuatBan()));

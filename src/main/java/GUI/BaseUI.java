@@ -6,11 +6,11 @@ package GUI;
 
 import DTO.NhanVienDTO;
 import com.formdev.flatlaf.FlatLightLaf;
-import java.awt.CardLayout;
+
+import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -18,12 +18,22 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author pc
  */
-public class base extends javax.swing.JFrame {
+public class BaseUI extends javax.swing.JFrame {
 
     ArrayList<JButton> listNavBarButton;
     public static NhanVienDTO nhanVienDangNhap;
+    public void setCard(String name, String btnText) {
+        ((CardLayout) cards.getLayout()).show(cards, name);
+        listNavBarButton.forEach(btn -> {
+            if (btn.getText().equalsIgnoreCase(btnText)) {
+                btn.setSelected(true);
+            } else {
+                btn.setSelected(false);
+            }
+        });
+    }
 
-    public base(NhanVienDTO nhanVienDangNhap) {
+    public BaseUI(NhanVienDTO nhanVienDangNhap) {
         this.nhanVienDangNhap = nhanVienDangNhap;
         initComponents();
         this.listNavBarButton = new ArrayList<>();
@@ -41,13 +51,14 @@ public class base extends javax.swing.JFrame {
         }
 
         // Nếu là nhân viên thì ẩn button nhân viên
-        if (nhanVienDangNhap.getVaiTro() == 0) {
+        if (nhanVienDangNhap.getVaiTro() == NhanVienDTO.VaiTro.NHAN_VIEN.ordinal()) {
             btnNhanVien.setVisible(false);
         }
 
-
-
     }
+
+    // Phương thức để thiết lập font cho toàn bộ UI
+
     
     public void selectNavBarButton(java.awt.event.ActionEvent evt) {
         listNavBarButton.forEach(btn -> {
@@ -83,14 +94,15 @@ public class base extends javax.swing.JFrame {
         btnNhaXuatBan = new javax.swing.JButton();
         btnNhaXuatBan1 = new javax.swing.JButton();
         btnLoaiSach = new javax.swing.JButton();
+        btnDangXuat = new javax.swing.JButton();
         cards = new javax.swing.JPanel();
         nguoiDocGUI1 = new GUI.NguoiDocGUI();
         loaiSachGUI1 = new GUI.LoaiSachGUI();
         tacGiaGUI1 = new GUI.TacGiaGUI();
-        phieuTraGUI1 = new GUI.PhieuTraGUI();
-        nhanVienGUI2 = new GUI.NhanVienGUI();
-        phieuMuonGUI1 = new GUI.PhieuMuonGUI();
-        sachGUI11 = new GUI.SachGUI();
+        phieuTraGUI1 = new GUI.PhieuTraGUI(nhanVienDangNhap);
+        nhanVienGUI2 = new GUI.NhanVienGUI(nhanVienDangNhap);
+        phieuMuonGUI1 = new GUI.PhieuMuonGUI(nhanVienDangNhap, this);
+        sachGUI11 = new GUI.SachGUI(nhanVienDangNhap, this);
         nhaXuatBanGUI1 = new GUI.NhaXuatBanGUI();
 
         jTextField1.setText("jTextField1");
@@ -207,7 +219,19 @@ public class base extends javax.swing.JFrame {
         });
         jPanel2.add(btnLoaiSach);
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 150, 530));
+        btnDangXuat.setBackground(new java.awt.Color(255, 255, 204));
+        btnDangXuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/log-out.png"))); // NOI18N
+        btnDangXuat.setText("Đăng xuất");
+        btnDangXuat.setBorderPainted(false);
+        btnDangXuat.setPreferredSize(jPanel2.getMinimumSize());
+        btnDangXuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDangXuatActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnDangXuat);
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 150, 590));
 
         cards.setBackground(new java.awt.Color(255, 255, 255));
         cards.setLayout(new java.awt.CardLayout());
@@ -222,7 +246,7 @@ public class base extends javax.swing.JFrame {
         cards.add(sachGUI11, "sachGUI");
         cards.add(nhaXuatBanGUI1, "nhaXuatBanGUI");
 
-        getContentPane().add(cards, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 930, 610));
+        getContentPane().add(cards, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 930, 670));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -267,6 +291,14 @@ public class base extends javax.swing.JFrame {
         selectNavBarButton(evt);
     }//GEN-LAST:event_btnLoaiSachActionPerformed
 
+    private void btnDangXuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangXuatActionPerformed
+       TaiKhoanGUI taiKhoanGUI = new TaiKhoanGUI();
+        taiKhoanGUI.setVisible(true);
+        taiKhoanGUI.setLocationRelativeTo(null);
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_btnDangXuatActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -281,7 +313,7 @@ public class base extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JFrame jframe = new base(null);
+                JFrame jframe = new BaseUI(null);
                 jframe.setVisible(true);
                 jframe.setLocationRelativeTo(null);
             }
@@ -290,6 +322,7 @@ public class base extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDangXuat;
     private javax.swing.JButton btnLoaiSach;
     private javax.swing.JButton btnNguoiDoc;
     private javax.swing.JButton btnNhaXuatBan;

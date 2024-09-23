@@ -1,8 +1,6 @@
 package BUS;
 
-import DAO.NguoiDocDAO;
 import DAO.NhaXuatBanDAO;
-import DTO.NguoiDocDTO;
 import DTO.NhaXuatBanDTO;
 
 import java.util.ArrayList;

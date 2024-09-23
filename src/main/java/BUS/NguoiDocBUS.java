@@ -28,12 +28,12 @@ public class NguoiDocBUS {
         listNguoiDoc = nguoiDocDAO.findAll();
     }
 
-    public NguoiDocDTO findOne(int id) {
+    public NguoiDocDTO findOne(long id) {
         return nguoiDocDAO.findOne(id);
     }
 
-    public void findMany(String hoTenTimKiem, boolean quaHanSuDung, int trangThai) {
-        listNguoiDoc = nguoiDocDAO.findMany(hoTenTimKiem, quaHanSuDung, trangThai);
+    public void findMany(long id, String hoTenTimKiem, boolean quaHanSuDung, int trangThai) {
+        listNguoiDoc = nguoiDocDAO.findMany(id, hoTenTimKiem, quaHanSuDung, trangThai);
     }
 
     public boolean insertOne(NguoiDocDTO nguoiDocDTO) {
@@ -48,7 +48,7 @@ public class NguoiDocBUS {
         return nguoiDocDAO.updateOne(nguoiDocDTO);
     }
 
-    public boolean deleteOne(int id) {
+    public boolean deleteOne(long id) {
         return nguoiDocDAO.deleteOne(id);
     }
 

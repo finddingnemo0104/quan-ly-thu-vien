@@ -5,8 +5,9 @@
 package GUI;
 
 import BUS.NguoiDocBUS;
-import DAO.MyConnection;
+import BUS.PhieuMuonBUS;
 import DTO.NguoiDocDTO;
+import DTO.PhieuMuonDTO;
 import Helpler.Helpler;
 
 import java.text.ParseException;
@@ -37,7 +38,6 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         initComponents();
 
         Helpler.centerCell(jTableNguoiDoc);
-
         setTableItemList();
     }
 
@@ -81,6 +81,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
     }
 
     public boolean checkTextField(String option) {
+        String id = txtIdThem.getText();
         String sdt = txtSDT.getText();
         Date ngaySinh = txtNgaySinh.getDate();
         String diaChi = txtDiaChi.getText();
@@ -93,6 +94,20 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             hoTen = txtHoTen1.getText();
             cmnd = txtCMND1.getText();
         }
+        // Kiểm tra id
+        if (isEmptyString(id)) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ID");
+            return false;
+        }
+        if (!id.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "ID chỉ được nhập số");
+            return false;
+        }
+        if (id.length() != 10) {
+            JOptionPane.showMessageDialog(this, "ID phải 10 chữ số");
+            return false;
+        }
+
         // Kiểm tra họ tên
         if (isEmptyString(hoTen)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập họ tên");
@@ -108,9 +123,9 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "SDT chỉ được nhập số");
             return false;
         }
-        // Kiểm tra số điện thoại có đúng 10 số không
-        if (sdt.length() != 10) {
-            JOptionPane.showMessageDialog(this, "SDT phải có 10 số");
+        // Kiểm tra số điện thoại có đúng 10 hoặc 11 số không
+        if (sdt.length() != 10 && sdt.length() != 11) {
+            JOptionPane.showMessageDialog(this, "SDT phải có 10 hoặc 11 số");
             return false;
         }
 
@@ -119,6 +134,12 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập ngày sinh");
             return false;
         }
+
+        if (!Helpler.isOlderThan18(ngaySinh)) {
+            JOptionPane.showMessageDialog(this, "Ngày sinh phải lớn hơn 18 tuổi");
+            return false;
+        }
+
         // Kiểm tra địa chỉ
         if (isEmptyString(diaChi)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ");
@@ -126,16 +147,16 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         }
         // Kiểm tra CMND
         if (isEmptyString(cmnd)) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập CMND");
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập CCCD");
             return false;
         }
         if (!cmnd.matches("[0-9]+")) {
-            JOptionPane.showMessageDialog(this, "CMND chỉ được nhập số");
+            JOptionPane.showMessageDialog(this, "CCCD chỉ được nhập số");
             return false;
         }
         // Kiểm tra CMND có đúng 12 số không
         if (cmnd.length() != 12) {
-            JOptionPane.showMessageDialog(this, "CMND phải có 12 số");
+            JOptionPane.showMessageDialog(this, "CCCD phải có 12 số");
             return false;
         }
         return true;
@@ -167,7 +188,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         txtID = new javax.swing.JTextField();
         jDialogTimKiem = new javax.swing.JDialog();
         jLabel13 = new javax.swing.JLabel();
-        txtHoTen2 = new javax.swing.JTextField();
+        txtIdTimKiem = new javax.swing.JTextField();
         btnXacNhanTim = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         ckbQuaHanSuDung = new javax.swing.JCheckBox();
@@ -176,6 +197,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         rbtnKhongViPham = new javax.swing.JRadioButton();
         rbtnBiKhoa = new javax.swing.JRadioButton();
         rbtnTatCa = new javax.swing.JRadioButton();
+        jLabel21 = new javax.swing.JLabel();
+        txtHoTenTimKiem = new javax.swing.JTextField();
         buttonGroupTinhTrang = new javax.swing.ButtonGroup();
         jDialogThem = new javax.swing.JDialog();
         txtHoTen = new javax.swing.JTextField();
@@ -189,6 +212,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         txtCMND = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         btnXacNhanThem = new javax.swing.JButton();
+        jLabel22 = new javax.swing.JLabel();
+        txtIdThem = new javax.swing.JTextField();
         String desktopDir = System.getProperty("user.home") + "/Desktop";
         jFileChooserExport = new javax.swing.JFileChooser(desktopDir);
         jFileChooserImport = new javax.swing.JFileChooser(desktopDir);
@@ -224,7 +249,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
 
         jLabel10.setText("Địa chỉ");
 
-        jLabel11.setText("CMND");
+        jLabel11.setText("CCCD");
 
         btnXacNhanSua.setText("Sửa");
         btnXacNhanSua.addActionListener(new java.awt.event.ActionListener() {
@@ -333,6 +358,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             }
         });
 
+        jLabel21.setText("ID");
+
         javax.swing.GroupLayout jDialogTimKiemLayout = new javax.swing.GroupLayout(jDialogTimKiem.getContentPane());
         jDialogTimKiem.getContentPane().setLayout(jDialogTimKiemLayout);
         jDialogTimKiemLayout.setHorizontalGroup(
@@ -344,11 +371,13 @@ public class NguoiDocGUI extends javax.swing.JPanel {
                         .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                             .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ckbQuaHanSuDung)
-                            .addComponent(txtHoTen2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtIdTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtHoTenTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jDialogTimKiemLayout.createSequentialGroup()
                         .addGap(53, 53, 53)
                         .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -367,13 +396,17 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             .addGroup(jDialogTimKiemLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtHoTen2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
-                .addGap(25, 25, 25)
+                    .addComponent(jLabel21)
+                    .addComponent(txtIdTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(txtHoTenTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
                     .addComponent(ckbQuaHanSuDung))
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel15)
                 .addGap(1, 1, 1)
                 .addComponent(rbtnTatCa, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -410,6 +443,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             }
         });
 
+        jLabel22.setText("ID");
+
         javax.swing.GroupLayout jDialogThemLayout = new javax.swing.GroupLayout(jDialogThem.getContentPane());
         jDialogThem.getContentPane().setLayout(jDialogThemLayout);
         jDialogThemLayout.setHorizontalGroup(
@@ -424,7 +459,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
                     .addGroup(jDialogThemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -433,13 +469,18 @@ public class NguoiDocGUI extends javax.swing.JPanel {
                     .addComponent(txtDiaChi)
                     .addComponent(txtNgaySinh, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                     .addComponent(txtSDT, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtHoTen))
+                    .addComponent(txtHoTen)
+                    .addComponent(txtIdThem))
                 .addContainerGap())
         );
         jDialogThemLayout.setVerticalGroup(
             jDialogThemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialogThemLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jDialogThemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(txtIdThem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jDialogThemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtHoTen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
@@ -459,7 +500,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
                 .addGroup(jDialogThemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCMND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnXacNhanThem)
                 .addContainerGap())
         );
@@ -475,10 +516,10 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                true, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -630,7 +671,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             return;
         }
         // Get value in text field
-        int id = Integer.parseInt(txtID.getText());
+        long id = Long.parseLong(txtID.getText());
         String sdt = txtSDT1.getText();
         LocalDate ngaySinh = convertToLocalDateViaMilisecond(txtNgaySinh1.getDate());
         String diaChi = txtDiaChi1.getText();
@@ -647,9 +688,9 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         nguoiDocDTO.setSdt(sdt);
         //Update record to database
         if (nguoiDocBus.updateOne(nguoiDocDTO)) {
-            System.out.println("Sua thanh cong");
+            JOptionPane.showMessageDialog(this, "Sửa thành công");
         } else {
-            System.out.println("Sua that bai");
+            JOptionPane.showMessageDialog(this, "Sửa thất bại");
         }
         setTableItemList();
         clearAllTextField();
@@ -662,33 +703,43 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa");
             return;
         }
+        NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
+
         if (selectedRows.length == 1) {
-            Object obj = jTableNguoiDoc.getValueAt(selectedRows[0], 0);
-            int dialogResult = JOptionPane.showConfirmDialog(this, "Xác nhận xóa người đọc với id = " + obj.toString());
+            long id = (long) jTableNguoiDoc.getValueAt(selectedRows[0], 0);
+            NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(id);
+
+            PhieuMuonBUS phieuMuonBUS = new PhieuMuonBUS();
+            ArrayList<PhieuMuonDTO> phieuMuonDTOArrayList = phieuMuonBUS.findByIdNguoiDoc(id);
+
+            // list is not empty
+            if (!phieuMuonDTOArrayList.isEmpty()) {
+                JOptionPane.showMessageDialog(this, String.format("Không thể xóa người đọc %s vì người đọc này đang có phiếu mượn", nguoiDocDTO.getHoTen()));
+                return;
+            }
+
+            int dialogResult = JOptionPane.showConfirmDialog(this, String.format("Xác nhận xóa người đọc '%s'", nguoiDocDTO.getHoTen()));
             if (dialogResult == JOptionPane.YES_OPTION) {
-                int id = Integer.parseInt(obj.toString());
-                NguoiDocBUS ndbus = new NguoiDocBUS();
-                if (ndbus.deleteOne(id)) {
-                    System.out.println("Xoa thanh cong");
+                if (nguoiDocBUS.deleteOne(id)) {
+                    JOptionPane.showMessageDialog(this, "Xoá thành công");
+                    setTableItemList();
+                    clearAllTextField();
                 } else {
-                    System.out.println("Xoa that bai");
+                    JOptionPane.showMessageDialog(this, "Xoá thất bại");
                 }
-                setTableItemList();
-                clearAllTextField();
             }
         } else {
-            ArrayList<Integer> arrayId = new ArrayList<>();
-            for (int row : selectedRows) {
-                Object id = jTableNguoiDoc.getValueAt(row, 0);
-                arrayId.add((Integer) id);
-            }
-            int dialogResult = JOptionPane.showConfirmDialog(this, "Xác nhận xóa các người đọc với id = " + arrayId.toString());
-            if (dialogResult == JOptionPane.YES_OPTION) {
-                NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
-                int count = nguoiDocBUS.deleteMany(arrayId);
-                setTableItemList();
-                JOptionPane.showMessageDialog(this, "Đã xóa " + count + " dòng");
-            }
+//            ArrayList<Integer> arrayId = new ArrayList<>();
+//            for (int row : selectedRows) {
+//                Object id = jTableNguoiDoc.getValueAt(row, 0);
+//                arrayId.add((Integer) id);
+//            }
+//            int dialogResult = JOptionPane.showConfirmDialog(this, "Xác nhận xóa các người đọc với id = " + arrayId.toString());
+//            if (dialogResult == JOptionPane.YES_OPTION) {
+//                int count = nguoiDocBUS.deleteMany(arrayId);
+//                setTableItemList();
+//                JOptionPane.showMessageDialog(this, "Đã xóa " + count + " dòng");
+//            }
         }
     }//GEN-LAST:event_btnXoaActionPerformed
 
@@ -710,7 +761,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
     }
 
     private void btnXacNhanTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanTimActionPerformed
-        String hoTenTimKiem = txtHoTen2.getText();
+        String hoTenTimKiem = txtHoTenTimKiem.getText();
         boolean quaHanSuDung = ckbQuaHanSuDung.isSelected();
         String trangThaiText = getSelectedButtonText(buttonGroupTinhTrang);
         int trangThai;
@@ -726,13 +777,24 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             default ->
                 trangThai = -1;
         }
-        if (!(!isEmptyString(hoTenTimKiem) || quaHanSuDung || trangThai != -1)) {
+        if (!(!isEmptyString(hoTenTimKiem) || quaHanSuDung || trangThai != -1 || !isEmptyString(txtIdTimKiem.getText()))) {
             JOptionPane.showMessageDialog(jDialogTimKiem, "Vui lòng ít nhất 1 điều kiện");
             return;
         }
+        long idTimKiem = -1;
+        // Kiểm tra id
+        if (!isEmptyString(txtIdTimKiem.getText())) {
+            if (!txtIdTimKiem.getText().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "ID chỉ được nhập số");
+                return;
+            } else {
+                idTimKiem = Long.parseLong(txtIdTimKiem.getText());
+            }
+        }
+
 
         NguoiDocBUS ndbus = new NguoiDocBUS();
-        ndbus.findMany(hoTenTimKiem, quaHanSuDung, trangThai);
+        ndbus.findMany(idTimKiem, hoTenTimKiem, quaHanSuDung, trangThai);
         setTableItemList(ndbus);
         jDialogTimKiem.setVisible(false);
     }//GEN-LAST:event_btnXacNhanTimActionPerformed
@@ -745,7 +807,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         if (!checkTextField("them")) {
             return;
         }
-        int id = MyConnection.getLastRecordId("NGUOI_DOC") + 1;
+        long id = Long.parseLong(txtIdThem.getText());
         String sdt = txtSDT.getText();
         LocalDate ngaySinh = convertToLocalDateViaMilisecond(txtNgaySinh.getDate());
         String diaChi = txtDiaChi.getText();
@@ -757,8 +819,15 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         int trangThaiViPham = 0;
         NguoiDocDTO nguoiDocDTO = new NguoiDocDTO(id, sdt, ngaySinh, diaChi, hoTen, cmnd, hanSuDung, soLuongMuonChoPhep, trangThaiViPham);
         NguoiDocBUS nguoiDocBus = new NguoiDocBUS();
+
+        if (nguoiDocBus.findOne(id) != null) {
+            JOptionPane.showMessageDialog(this, String.format("ID %s đã tồn tại", id));
+            return;
+        }
+
         nguoiDocBus.insertOne(nguoiDocDTO);
         setTableItemList();
+        JOptionPane.showMessageDialog(this, "Thêm thành công");
         clearAllTextField();
         jDialogThem.setVisible(false);
     }//GEN-LAST:event_btnXacNhanThemActionPerformed
@@ -803,6 +872,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -822,8 +893,10 @@ public class NguoiDocGUI extends javax.swing.JPanel {
     private javax.swing.JTextField txtDiaChi1;
     private javax.swing.JTextField txtHoTen;
     private javax.swing.JTextField txtHoTen1;
-    private javax.swing.JTextField txtHoTen2;
+    private javax.swing.JTextField txtHoTenTimKiem;
     private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtIdThem;
+    private javax.swing.JTextField txtIdTimKiem;
     private com.toedter.calendar.JDateChooser txtNgaySinh;
     private com.toedter.calendar.JDateChooser txtNgaySinh1;
     private javax.swing.JTextField txtSDT;

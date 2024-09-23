@@ -3,7 +3,6 @@ package BUS;
 import DAO.PhieuTraDAO;
 import DTO.PhieuTraDTO;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 public class PhieuTraBUS {
@@ -34,7 +33,7 @@ public class PhieuTraBUS {
         return null;
     }
 
-    public ArrayList<PhieuTraDTO> findMany(int id, int idNguoiDoc, java.util.Date ngayTraFrom, java.util.Date ngayTraTo, int tienPhatFrom, int tienPhatTo) {
+    public ArrayList<PhieuTraDTO> findMany(int id, long idNguoiDoc, java.util.Date ngayTraFrom, java.util.Date ngayTraTo, int tienPhatFrom, int tienPhatTo) {
         try {
             return PhieuTraDAO.findMany(id, idNguoiDoc, ngayTraFrom, ngayTraTo, tienPhatFrom, tienPhatTo);
         } catch (Exception e) {
@@ -68,5 +67,14 @@ public class PhieuTraBUS {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public PhieuTraDTO findByIdPhieuMuon(int idPhieuMuon) {
+        try {
+            return PhieuTraDAO.findByIdPhieuMuon(idPhieuMuon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

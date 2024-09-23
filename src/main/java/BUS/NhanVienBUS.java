@@ -5,7 +5,6 @@
 package BUS;
 
 import DAO.NhanVienDAO;
-import DTO.NguoiDocDTO;
 import DTO.NhanVienDTO;
 import java.util.ArrayList;
 
@@ -33,8 +32,8 @@ public class NhanVienBUS {
         return nhanvienDAO.findOne(id);
     }
     
-    public void findMany(int id, String timHotenNV, int tinhtrangNV){
-        listNhanVien = nhanvienDAO.findMany(id, timHotenNV, tinhtrangNV);
+    public void findMany(int id, String timHotenNV, int tinhtrangNV, int vaiTro){
+        listNhanVien = nhanvienDAO.findMany(id, timHotenNV, tinhtrangNV, vaiTro);
     }
     
     public boolean ThemNhanVien(NhanVienDTO nhanvienDTO){
@@ -67,5 +66,13 @@ public class NhanVienBUS {
             return true;
         }
         return false;
+    }
+
+    public NhanVienDTO findByVaiTro(int vaiTro) {
+        return nhanvienDAO.findByVaiTro(vaiTro);
+    }
+
+    public int countQuanLy() {
+        return nhanvienDAO.countQuanLy();
     }
 }

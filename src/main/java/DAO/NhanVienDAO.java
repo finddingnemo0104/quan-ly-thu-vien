@@ -30,7 +30,8 @@ public class NhanVienDAO {
                     rs.getString("diaChi"),
                     rs.getString("CCCD"),
                     rs.getInt("vaiTro"),
-                    rs.getString("matKhau")
+                    rs.getString("matKhau"),
+                    rs.getInt("tinhTrangLamViec")
             );
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,7 +42,7 @@ public class NhanVienDAO {
     public boolean ThemNhanVien(NhanVienDTO nhanVien) {
         try {
             Connection con = MyConnection.getConnection();
-            String queryInsert = "INSERT INTO NHAN_VIEN(id, hoTen, ngaySinh, diaChi, CCCD, vaiTro, matKhau) VALUES(?,?,?,?,?,?,?)";
+            String queryInsert = "INSERT INTO NHAN_VIEN(id, hoTen, ngaySinh, diaChi, CCCD, vaiTro, matKhau, tinhTrangLamViec) VALUES(?,?,?,?,?,?,?,?)";
             try {
                 Date ngaySinh = Date.valueOf(nhanVien.getngaysinh_NV());
 
@@ -53,6 +54,7 @@ public class NhanVienDAO {
                 prest.setString(5, nhanVien.getCCCD());
                 prest.setInt(6, nhanVien.getVaiTro());
                 prest.setString(7, nhanVien.getMatKhau());
+                prest.setInt(8, nhanVien.getTinhTrangLamViec().ordinal());
                 prest.executeUpdate();
             } catch (SQLException e) {
                 System.out.print(e);
@@ -82,7 +84,8 @@ public class NhanVienDAO {
                         rs.getString("diaChi"),
                         rs.getString("CCCD"),
                         rs.getInt("vaiTro"),
-                        rs.getString("matKhau")
+                        rs.getString("matKhau"),
+                        rs.getInt("tinhTrangLamViec")
                 );
                 listNhanVien.add(nhanvienDTO);
             }
@@ -112,7 +115,7 @@ public class NhanVienDAO {
         return nhanvienDTO;
     }
 
-    public ArrayList<NhanVienDTO> findMany(int id, String timHotenNV, int tinhtrangNV) {
+    public ArrayList<NhanVienDTO> findMany(int id, String timHotenNV, int tinhtrangNV, int vaiTro) {
         ArrayList<NhanVienDTO> listResult = null;
         try {
             Connection con = MyConnection.getConnection();
@@ -125,10 +128,13 @@ public class NhanVienDAO {
                 queries.add(String.format("id = %d \n", id));
             }
             if (!timHotenNV.equalsIgnoreCase("")) {
-                queries.add(String.format("hoten LIKE '%%%s%%'\n", timHotenNV));
+                queries.add(String.format("hoten LIKE N'%%%s%%'\n", timHotenNV));
             }
             if (tinhtrangNV != -1) {
-                queries.add(String.format("tinhTrang = %d\n", tinhtrangNV));
+                queries.add(String.format("tinhTrangLamViec = %d\n", tinhtrangNV));
+            }
+            if (vaiTro != -1) {
+                queries.add(String.format("vaiTro = %d\n", vaiTro));
             }
             for (int i = 0; i < queries.size(); i++) {
                 if (i + 1 < queries.size()) {
@@ -156,7 +162,7 @@ public class NhanVienDAO {
             Connection con = MyConnection.getConnection();
             String queryUpdateOne
                     = " UPDATE NHAN_VIEN"
-                    + " SET hoTen=?, ngaySinh=?, diaChi=?, CCCD=?,vaiTro=?,matKhau=?"
+                    + " SET hoTen=?, ngaySinh=?, diaChi=?, CCCD=?,vaiTro=?,matKhau=?,tinhTrangLamViec=?"
                     + " WHERE id=?";
             PreparedStatement prest = con.prepareStatement(queryUpdateOne);
             Date ngaySinh = Date.valueOf(nhanvienDTO.getngaysinh_NV());
@@ -166,7 +172,8 @@ public class NhanVienDAO {
             prest.setString(4, nhanvienDTO.getCCCD());
             prest.setInt(5, nhanvienDTO.getVaiTro());
             prest.setString(6, nhanvienDTO.getMatKhau());
-            prest.setInt(7,nhanvienDTO.getID_NV());
+            prest.setInt(7, nhanvienDTO.getTinhTrangLamViec().ordinal());
+            prest.setInt(8,nhanvienDTO.getID_NV());
             int count = prest.executeUpdate();
             con.close();
             return count != 0;
@@ -227,4 +234,42 @@ public class NhanVienDAO {
         }
         return false;
     }
+
+    public NhanVienDTO findByVaiTro(int vaiTro) {
+        try {
+            Connection con = MyConnection.getConnection();
+            String queryFind = "SELECT *\n" +
+                    "FROM NHAN_VIEN\n" +
+                    "WHERE vaiTro = ?";
+            PreparedStatement prest = con.prepareStatement(queryFind);
+            prest.setInt(1, vaiTro);
+            ResultSet rs = prest.executeQuery();
+            if (rs.next()) {
+                NhanVienDTO nhanvienDTO = resultSetToNhanVienDTO(rs);
+                return nhanvienDTO;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int countQuanLy() {
+        try {
+            Connection con = MyConnection.getConnection();
+            String queryCount = "SELECT COUNT(*) FROM NHAN_VIEN WHERE vaiTro = 1";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(queryCount);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }

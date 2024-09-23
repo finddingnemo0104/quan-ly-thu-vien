@@ -8,30 +8,16 @@ import BUS.*;
 import DAO.MyConnection;
 import DAO.PhieuTraDAO;
 import DTO.*;
+import Helpler.Helpler;
 
-import java.awt.*;
-import java.io.File;
-import java.sql.Connection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import Helpler.Helpler;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * @author pc
@@ -44,12 +30,17 @@ public class PhieuTraGUI extends javax.swing.JPanel {
     private DefaultTableModel phieuTraModel;
     private PhieuTraDTO phieuTraDTOCanThem;
     private PhieuMuonDTO phieuMuonDTO;
+    private NhanVienDTO nhanVienDangNhap;
 
-    public PhieuTraGUI() {
+    public PhieuTraGUI(NhanVienDTO nhanVienDangNhap) {
         initComponents();
         Helpler.centerCell(jTablePhieuTra);
         Helpler.centerCell(jTableXacNhanCTPhieuTra);
         Helpler.centerCell(jTableXemChiTiet);
+
+        if (nhanVienDangNhap.getVaiTro() != NhanVienDTO.VaiTro.QUAN_LY.ordinal()) {
+            btnXoa.setEnabled(false);
+        }
 
         setTableItemList();
         // Format date
@@ -68,11 +59,11 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         PhieuTraBUS phieuTraBUS = new PhieuTraBUS();
         ArrayList<PhieuTraDTO> listPhieuTra = phieuTraBUS.findAll();
         listPhieuTra.forEach(phieuTraDTO -> {
-            NguoiDocDTO nguoiDocDTO = new NguoiDocBUS().findOne(phieuTraDTO.getIdNguoiDoc());
             phieuTraModel.addRow(new Object[]{
                     phieuTraDTO.getId(),
+                    phieuTraDTO.getIdPhieuMuon(),
                     phieuTraDTO.getIdNguoiDoc(),
-                    nguoiDocDTO.getHoTen(),
+                    phieuTraDTO.getNguoiDocDTO().getHoTen(),
                     phieuTraDTO.getNgayTraThatSu().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     phieuTraDTO.getTienPhat()
             });
@@ -84,7 +75,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         txtIdPhieuMuon.setText("");
         DefaultTableModel xacNhanCTPhieuTraModel = (DefaultTableModel) jTableXacNhanCTPhieuTra.getModel();
         xacNhanCTPhieuTraModel.setRowCount(0);
-        txtIdNguoiDocThem.setText("");
+//        txtIdNguoiDocThem.setText("");
         //Dialog Xem
         txtIDPhieuXem.setText("");
         txtIDNguoiDocXem.setText("");
@@ -111,7 +102,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         jDialogThem = new javax.swing.JDialog();
         cardsThem = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtIdPhieuMuon = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -121,7 +111,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         btnHienThiDanhSachTra = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         btnXacNhan = new javax.swing.JButton();
-        txtIdNguoiDocThem = new javax.swing.JTextField();
         jDialogXemChiTiet = new javax.swing.JDialog();
         jLabel5 = new javax.swing.JLabel();
         txtIDPhieuXem = new javax.swing.JTextField();
@@ -157,20 +146,18 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        btnThem = new javax.swing.JButton();
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         btnTimKiem = new javax.swing.JButton();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         btnXem = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         btnHuyTimKiem = new javax.swing.JButton();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
+        btnXoa = new javax.swing.JButton();
 
         jDialogThem.setTitle("Them");
         jDialogThem.setMinimumSize(new java.awt.Dimension(600, 400));
-
-        jLabel4.setText("ID Người đọc");
 
         jLabel1.setText("ID Phiếu mượn");
 
@@ -235,24 +222,16 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1))
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtIdPhieuMuon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtIdNguoiDocThem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtIdPhieuMuon, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtIdNguoiDocThem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(46, 46, 46)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtIdPhieuMuon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -495,14 +474,14 @@ public class PhieuTraGUI extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "ID người đọc", "Người đọc", "Ngày trả thực tế", "Tiền phạt"
+                "ID", "ID phiếu mượn", "ID người đọc", "Người đọc", "Ngày trả thực tế", "Tiền phạt"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -527,14 +506,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         jPanel2.add(jLabel2);
 
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
-
-        btnThem.setText("THÊM");
-        btnThem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemActionPerformed(evt);
-            }
-        });
-        jPanel3.add(btnThem);
         jPanel3.add(filler5);
         jPanel3.add(filler1);
 
@@ -546,7 +517,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         });
         jPanel3.add(btnTimKiem);
         jPanel3.add(filler4);
-        jPanel3.add(filler3);
 
         btnXem.setText("XEM CHI TIẾT");
         btnXem.setInheritsPopupMenu(true);
@@ -558,15 +528,24 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         jPanel3.add(btnXem);
         jPanel3.add(filler2);
 
-        jPanel4.add(jPanel3);
-
         btnHuyTimKiem.setText("TẢI LẠI");
         btnHuyTimKiem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHuyTimKiemActionPerformed(evt);
             }
         });
-        jPanel4.add(btnHuyTimKiem);
+        jPanel3.add(btnHuyTimKiem);
+        jPanel3.add(filler3);
+
+        btnXoa.setText("XOÁ");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnXoa);
+
+        jPanel4.add(jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -586,21 +565,13 @@ public class PhieuTraGUI extends javax.swing.JPanel {
                 .addGap(49, 49, 49)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
-                .addGap(37, 37, 37))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(674, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        clearAll();
-        loadNguoiDoc();
-        jDialogThem.setVisible(true);
-        jDialogThem.setLocationRelativeTo(null);
-    }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnXemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemActionPerformed
         clearAll();
@@ -650,6 +621,8 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         // Get all rows in the table to CTPhieuTraDTO
         int rowCount = jTableXacNhanCTPhieuTra.getRowCount();
         int tienPhat = 0;
+        int tongSoLuongMuon = 0;
+        int tongSoLuongTra = 0;
         for (int row = 0; row < rowCount; row++) {
             int idSach = (int) jTableXacNhanCTPhieuTra.getValueAt(row, 0);
             int idPhieuTra = phieuTraDTOCanThem.getId();
@@ -660,13 +633,27 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             // Tính tiền phạt
             tienPhat += (soLuongMuon - soLuongTra) * giaSach;
             int soNgayTre = (int) (LocalDate.now().toEpochDay() - phieuMuonDTO.getNgay_Tra().toLocalDate().toEpochDay());
-            tienPhat += soNgayTre * 0.1 * giaSach * (soLuongMuon - soLuongTra);
+            tienPhat += soNgayTre * 0.1 * giaSach * soLuongMuon;
+
+            tongSoLuongMuon += soLuongMuon;
+            tongSoLuongTra += soLuongTra;
 
             CTPhieuTraDTO ctPhieuTraDTO = new CTPhieuTraDTO(idSach, idPhieuTra, soLuongTra, tinhTrang);
             phieuTraDTOCanThem.getListCTPhieuTra().add(ctPhieuTraDTO);
 
         }
         phieuTraDTOCanThem.setTienPhat(tienPhat);
+
+        if (tongSoLuongMuon == tongSoLuongTra) {
+            phieuMuonDTO.setTinhTrang(PhieuMuonDTO.TinhTrang.DA_TRA);
+        } else {
+            phieuMuonDTO.setTinhTrang(PhieuMuonDTO.TinhTrang.TRA_THIEU);
+            // Vi pham
+            NguoiDocDTO nguoiDocDTO = new NguoiDocBUS().findOne(phieuTraDTOCanThem.getIdNguoiDoc());
+            nguoiDocDTO.setTrangThaiViPham(NguoiDocDTO.TrangThaiViPham.VI_PHAM);
+            new NguoiDocBUS().updateOne(nguoiDocDTO);
+        }
+        new PhieuMuonBUS().updateOne(phieuMuonDTO);
 
         //insert PhieuTra
         PhieuTraBUS phieuTraBUS = new PhieuTraBUS();
@@ -690,6 +677,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         jDialogThem.setVisible(false);
         setTableItemList();
         clearAll();
+
     }//GEN-LAST:event_btnXacNhanActionPerformed
 
     private void btnHienThiDanhSachTraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHienThiDanhSachTraActionPerformed
@@ -698,21 +686,13 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(jDialogThem, "Vui lòng nhập đầy đủ");
             return;
         }
-        Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "ID người đọc", jDialogThem);
+//        Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "ID người đọc", jDialogThem);
         Helpler.checkTextFieldNumber(txtIdPhieuMuon, "ID phiếu mượn", jDialogThem);
         int idPhieuMuon = Integer.parseInt(txtIdPhieuMuon.getText());
-        int idNguoiDoc = Integer.parseInt(txtIdNguoiDocThem.getText());
-        // Find nguoiDoc
-        NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
-        NguoiDocDTO nguoiDocDTOCanThem = nguoiDocBUS.findOne(idNguoiDoc);
         // Find phieuMuon
         PhieuMuonBUS phieuMuonBUS = new PhieuMuonBUS();
         PhieuMuonDTO phieuMuonDTOCanThem = phieuMuonBUS.findOne(idPhieuMuon);
-        // Check
-        if (nguoiDocDTOCanThem == null) {
-            JOptionPane.showMessageDialog(jDialogThem, "Không có người đọc với id = " + nguoiDocDTOCanThem.getId());
-            return;
-        }
+
         // Check
         if (phieuMuonDTOCanThem == null) {
             JOptionPane.showMessageDialog(jDialogThem, "Không có phiếu mượn với id = " + idPhieuMuon);
@@ -720,10 +700,11 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         }
         // New phieuTra
         int idPhieuTra = MyConnection.getLastRecordId(PhieuTraDAO.TABLE_NAME) + 1;
-        phieuTraDTOCanThem = new PhieuTraDTO(idPhieuTra, nguoiDocDTOCanThem.getId(), LocalDate.now(), 0);
         // Get phieu muon join sach
         CTPhieuMuonBUS ctPhieuMuonBUS = new CTPhieuMuonBUS();
         phieuMuonDTO = phieuMuonBUS.findOne(idPhieuMuon);
+        phieuTraDTOCanThem = new PhieuTraDTO(idPhieuTra, phieuMuonDTOCanThem.getId_ND(), LocalDate.now(), 0, phieuMuonDTO.getId_pm());
+
         Map<CTPhieuMuonDTO, SachDTO> listCTPhieuMuonVaSach = ctPhieuMuonBUS.findManyJoinSach(idPhieuMuon);
         // insert into table
         DefaultTableModel xacNhanCTPhieuTraModel = (DefaultTableModel) jTableXacNhanCTPhieuTra.getModel();
@@ -751,7 +732,8 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(jDialogTimKiem, "Vui lòng ít nhất chọn 1 điều kiện");
             return;
         }
-        int idPhieu, idNguoiDoc, tienPhatFrom, tienPhatTo;
+        int idPhieu, tienPhatFrom, tienPhatTo;
+        long idNguoiDoc;
         if (txtIDPhieuTimKiem.getText().isEmpty()) {
             idPhieu = -1;
         } else {
@@ -761,7 +743,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         if (txtIDNguoiDocTimKiem.getText().isEmpty()) {
             idNguoiDoc = -1;
         } else {
-            idNguoiDoc = Integer.parseInt(txtIDNguoiDocTimKiem.getText());
+            idNguoiDoc = Long.parseLong(txtIDNguoiDocTimKiem.getText());
         }
 
         if (txtTienPhatTimKiemFrom.getText().isEmpty()) {
@@ -807,6 +789,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             NguoiDocDTO nguoiDocDTO = new NguoiDocBUS().findOne(phieuTraDTO.getIdNguoiDoc());
             phieuTraModel.addRow(new Object[]{
                     phieuTraDTO.getId(),
+                    phieuTraDTO.getIdPhieuMuon(),
                     phieuTraDTO.getIdNguoiDoc(),
                     nguoiDocDTO.getHoTen(),
                     phieuTraDTO.getNgayTraThatSu().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
@@ -815,15 +798,66 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_btnXacNhanTimKiemActionPerformed
 
+    private void
+
+
+    btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        int selectedRow = jTablePhieuTra.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa");
+            return;
+        }
+
+        Object obj = jTablePhieuTra.getValueAt(selectedRow, 0);
+        int idPhieuTra = Integer.parseInt(obj.toString());
+
+        if (!Helpler.showConfirmDialog(this,
+                String.format("Bạn có chắc chắn muốn xoá phiếu trả với ID = %s không?", idPhieuTra), "Xoá phiếu trả")) {
+            return;
+        }
+
+        PhieuTraBUS phieuTraBUS = new PhieuTraBUS();
+        PhieuTraDTO phieuTraDTO = phieuTraBUS.findOne(idPhieuTra);
+        CTPhieuTraBUS ctPhieuTraBUS = new CTPhieuTraBUS();
+        SachBUS sachBUS = new SachBUS();
+        NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
+
+        Map<CTPhieuTraDTO, SachDTO> listCTPhieuTraVaSach = ctPhieuTraBUS.findManyJoinSach(idPhieuTra);
+        listCTPhieuTraVaSach.forEach((ctPhieuTraDTO, sachDTO) -> {
+            sachDTO.setSoluong(sachDTO.getSoluong() - ctPhieuTraDTO.getSoLuong());
+            if (sachDTO.getSoluong() <= 0) {
+                sachDTO.setTrangthai(SachDTO.TrangThaiSach.HET_SACH.ordinal());
+            }
+            NguoiDocDTO nguoiDocDTO = new NguoiDocDTO();
+            nguoiDocDTO.setSoLuongMuonChoPhep(nguoiDocDTO.getSoLuongMuonChoPhep() - ctPhieuTraDTO.getSoLuong());
+            nguoiDocBUS.updateOne(nguoiDocDTO);
+            sachBUS.update(sachDTO);
+            ctPhieuTraBUS.deleteOne(ctPhieuTraDTO.getIdSach(), ctPhieuTraDTO.getIdPhieuTra());
+        });
+
+
+
+        phieuTraBUS.deleteOne(phieuTraDTO.getId());
+
+        // Update phieuMuon tinhTrang to CHUA_TRA
+        PhieuMuonBUS phieuMuonBUS = new PhieuMuonBUS();
+        PhieuMuonDTO phieuMuonThuocPhieuTra = phieuMuonBUS.findOne(phieuTraDTO.getIdPhieuMuon());
+        phieuMuonThuocPhieuTra.setTinhTrang(PhieuMuonDTO.TinhTrang.CHUA_TRA);
+        phieuMuonBUS.updateOne(phieuMuonThuocPhieuTra);
+
+        setTableItemList();
+        JOptionPane.showMessageDialog(this, "Xoá thành công");
+    }//GEN-LAST:event_btnXoaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHienThiDanhSachTra;
     private javax.swing.JButton btnHuyTimKiem;
-    private javax.swing.JButton btnThem;
     private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnXacNhan;
     private javax.swing.JButton btnXacNhanTimKiem;
     private javax.swing.JButton btnXem;
+    private javax.swing.JButton btnXoa;
     private javax.swing.JPanel cardsThem;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
@@ -845,7 +879,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -870,7 +903,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
     private javax.swing.JTextField txtIDNguoiDocXem;
     private javax.swing.JTextField txtIDPhieuTimKiem;
     private javax.swing.JTextField txtIDPhieuXem;
-    private javax.swing.JTextField txtIdNguoiDocThem;
     private javax.swing.JTextField txtIdPhieuMuon;
     private javax.swing.JTextField txtTienPhatTimKiemFrom;
     private javax.swing.JTextField txtTienPhatTimKiemTo;

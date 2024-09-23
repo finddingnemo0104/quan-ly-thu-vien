@@ -4,27 +4,19 @@
  */
 package GUI;
 
-import BUS.NguoiDocBUS;
-import BUS.NhaXuatBanBUS;
 import BUS.SachBUS;
 import BUS.TacGiaBUS;
 import DAO.MyConnection;
 import DAO.TacGiaDAO;
-import DTO.NguoiDocDTO;
-import DTO.NhaXuatBanDTO;
 import DTO.TacGiaDTO;
 import Helpler.Helpler;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -470,6 +462,9 @@ public class TacGiaGUI extends javax.swing.JPanel {
         setTableItemList();
         clearAllTextField();
         jDialogSua.setVisible(false);
+
+        JOptionPane.showMessageDialog(this, "Sửa thành công");
+
     }//GEN-LAST:event_btnXacNhanSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
@@ -478,7 +473,9 @@ public class TacGiaGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa");
             return;
         }
+
         int id = (int) jTableTacGia.getValueAt(selectedRow, 0);
+
         // count all sach with idTacGia = id
         int countSachOfTacGia = new SachBUS().countSachByIdTacGia(id);
 
@@ -486,11 +483,17 @@ public class TacGiaGUI extends javax.swing.JPanel {
         String name = (String) jTableTacGia.getValueAt(selectedRow, 1);
         if (countSachOfTacGia > 0) {
             int dialogResult = JOptionPane.showConfirmDialog(this, "Tác giả '" + name + "' đang có " + countSachOfTacGia + " quyển sách trong cơ sở dữ liệu.\nBạn có muốn xóa tác giả \"" + name +  "\" không?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-            if (dialogResult == JOptionPane.NO_OPTION) {
+            if (dialogResult == JOptionPane.NO_OPTION || dialogResult == JOptionPane.CLOSED_OPTION || dialogResult == JOptionPane.CANCEL_OPTION) {
                 return;
             }
 
         }
+
+        if (!Helpler.showConfirmDialog(this,
+                String.format("Bạn có chắc chắn muốn xoá tác giả '%s' không?", name), "Xoá tác giả")) {
+            return;
+        }
+
         // delete all sach with idTacGia = id
         TacGiaBUS tacGiaBUS = new TacGiaBUS();
         if (!tacGiaBUS.deleteOne(id)) {
@@ -498,6 +501,8 @@ public class TacGiaGUI extends javax.swing.JPanel {
             return;
         }
         setTableItemList();
+        JOptionPane.showMessageDialog(this, "Xoá thành công");
+
     }//GEN-LAST:event_btnXoaActionPerformed
 
     public String getSelectedButtonText(ButtonGroup buttonGroup) {
@@ -550,6 +555,8 @@ public class TacGiaGUI extends javax.swing.JPanel {
         setTableItemList();
         clearAllTextField();
         jDialogThem.setVisible(false);
+        JOptionPane.showMessageDialog(this, "Thêm thành công");
+
     }//GEN-LAST:event_btnXacNhanThemActionPerformed
 
     private void txtHoTenThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoTenThemActionPerformed

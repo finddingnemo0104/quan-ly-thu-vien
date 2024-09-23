@@ -11,14 +11,14 @@ package DTO;
  */
 public class SachDTO {
     public enum TrangThaiSach {
-        CO_THE_MUON, HET_SACH, BI_XOA;
+        CO_THE_MUON, HET_SACH, DANG_NHAP_KHO;
 
         // Get value by toString value
         public static TrangThaiSach fromString(String text) {
             return switch (text) {
                 case "Có thể mượn" -> CO_THE_MUON;
                 case "Hết sách" -> HET_SACH;
-                case "Bị xóa" -> BI_XOA;
+                case "Đang nhập kho" -> DANG_NHAP_KHO;
                 default -> throw new IllegalStateException("Unexpected value: " + text);
             };
         }
@@ -28,7 +28,7 @@ public class SachDTO {
             return switch (this) {
                 case CO_THE_MUON -> "Có thể mượn";
                 case HET_SACH -> "Hết sách";
-                case BI_XOA -> "Bị xóa";
+                case DANG_NHAP_KHO -> "Đang nhập kho";
             };
         }
     }
@@ -58,6 +58,23 @@ public class SachDTO {
         this.idTacGia = idTacGia;
         this.idNhaXuatBan = idNhaXuatBan;
         this.idLoaiSach = idLoaiSach;
+        this.tacGia = new TacGiaDTO();
+        this.nhaXuatBan = new NhaXuatBanDTO();
+    }
+
+    public SachDTO(int id, String tenSach, float giaSach, int soluong, int trangthai, int idTacGia, int idNhaXuatBan, int idLoaiSach, String tenTacGia, String tenNhaXuatBan) {
+        this.id = id;
+        this.tenSach = tenSach;
+        this.giaSach = giaSach;
+        this.soluong = soluong;
+        this.trangthai = TrangThaiSach.values()[trangthai];
+        this.idTacGia = idTacGia;
+        this.idNhaXuatBan = idNhaXuatBan;
+        this.idLoaiSach = idLoaiSach;
+        this.tacGia = new TacGiaDTO();
+        this.nhaXuatBan = new NhaXuatBanDTO();
+        this.tacGia.setHoTen(tenTacGia);
+        this.nhaXuatBan.setTen(tenNhaXuatBan);
     }
 
     public int getId() {

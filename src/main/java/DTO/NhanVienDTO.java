@@ -11,9 +11,48 @@ import java.time.LocalDate;
  * @author ASUS
  */
 public class NhanVienDTO {
+    // 0 là nhân viên
+    // 1 là quản lý
     public enum VaiTro {
         NHAN_VIEN,
-        QUAN_LY,
+        QUAN_LY;
+        @Override
+        public String toString() {
+            return switch (this) {
+                case NHAN_VIEN -> "Nhân viên";
+                case QUAN_LY -> "Quản lý";
+            };
+        }
+
+        public static VaiTro fromString(String vaiTro) {
+            return switch (vaiTro) {
+                case "Nhân viên" -> NHAN_VIEN;
+                case "Quản lý" -> QUAN_LY;
+                default -> null;
+            };
+        }
+    }
+    // 0 là nghỉ việc
+    // 1 là đang làm
+    public enum TinhTrangLamViec {
+        NGHI_VIEC, DANG_LAM;
+
+        // Get value by toString value
+        public static TinhTrangLamViec fromString(String text) {
+            return switch (text) {
+                case "Nghỉ việc" -> NGHI_VIEC;
+                case "Đang làm" -> DANG_LAM;
+                default -> throw new IllegalStateException("Unexpected value: " + text);
+            };
+        }
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case NGHI_VIEC -> "Nghỉ việc";
+                case DANG_LAM -> "Đang làm";
+            };
+        }
     }
 
     private int id_NV;
@@ -23,8 +62,11 @@ public class NhanVienDTO {
     private String CCCD;
     private VaiTro vaiTro;
     private String matKhau;
+    private TinhTrangLamViec tinhTrangLamViec;
 
-    public NhanVienDTO(int ID_NV, String HoTen_NV, LocalDate NgaySinh_NV, String DiaChi_NV, String CCCD, int vaiTro, String MatKhau) {
+    public NhanVienDTO() {}
+
+    public NhanVienDTO(int ID_NV, String HoTen_NV, LocalDate NgaySinh_NV, String DiaChi_NV, String CCCD, int vaiTro, String MatKhau, int tinhTrangLamViec) {
         this.id_NV = ID_NV;
         this.hoten_NV = HoTen_NV;
         this.ngaysinh_NV = NgaySinh_NV;
@@ -32,6 +74,7 @@ public class NhanVienDTO {
         this.CCCD = CCCD;
         this.vaiTro = vaiTro == 1 ? VaiTro.QUAN_LY : VaiTro.NHAN_VIEN;
         this.matKhau = MatKhau;
+        this.tinhTrangLamViec = TinhTrangLamViec.values()[tinhTrangLamViec];
     }
 
    
@@ -94,5 +137,13 @@ public class NhanVienDTO {
 
     public void setMatKhau(String MatKhau) {
         this.matKhau = MatKhau;
+    }
+
+    public TinhTrangLamViec getTinhTrangLamViec() {
+        return tinhTrangLamViec;
+    }
+
+    public void setTinhTrangLamViec(TinhTrangLamViec tinhTrangLamViec) {
+        this.tinhTrangLamViec = tinhTrangLamViec;
     }
 }

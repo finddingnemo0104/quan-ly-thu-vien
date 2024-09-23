@@ -5,17 +5,20 @@ import java.util.ArrayList;
 
 public class PhieuTraDTO {
     private int id;
-    private int idNguoiDoc;
+    private long idNguoiDoc;
     private LocalDate ngayTraThatSu;
     private int tienPhat;
+    private int idPhieuMuon;
+    private NguoiDocDTO nguoiDocDTO;
     private ArrayList<CTPhieuTraDTO> listCTPhieuTra;
 
-    public PhieuTraDTO(int id, int idNguoiDoc, LocalDate ngayTraThatSu, int tienPhat) {
+    public PhieuTraDTO(int id, long idNguoiDoc, LocalDate ngayTraThatSu, int tienPhat, int idPhieuMuon) {
         this.id = id;
         this.idNguoiDoc = idNguoiDoc;
         this.ngayTraThatSu = ngayTraThatSu;
         this.tienPhat = tienPhat;
         listCTPhieuTra = new ArrayList<>();
+        this.idPhieuMuon = idPhieuMuon;
     }
 
     public String toString() {
@@ -38,11 +41,11 @@ public class PhieuTraDTO {
         this.id = id;
     }
 
-    public int getIdNguoiDoc() {
+    public long getIdNguoiDoc() {
         return idNguoiDoc;
     }
 
-    public void setIdNguoiDoc(int idNguoiDoc) {
+    public void setIdNguoiDoc(long idNguoiDoc) {
         this.idNguoiDoc = idNguoiDoc;
     }
 
@@ -60,5 +63,21 @@ public class PhieuTraDTO {
 
     public void setTienPhat(int tienPhat) {
         this.tienPhat = tienPhat;
+    }
+
+    public int getIdPhieuMuon() {
+        return idPhieuMuon;
+    }
+
+    public void setIdPhieuMuon(int idPhieuMuon) {
+        this.idPhieuMuon = idPhieuMuon;
+    }
+
+    public NguoiDocDTO getNguoiDocDTO() {
+        return nguoiDocDTO;
+    }
+
+    public void setNguoiDocDTO(NguoiDocDTO nguoiDocDTO) {
+        this.nguoiDocDTO = nguoiDocDTO;
     }
 }

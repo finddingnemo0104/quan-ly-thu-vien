@@ -1,10 +1,6 @@
 package DAO;
 
-import BUS.CTPhieuTraBUS;
-import BUS.PhieuTraBUS;
-import DTO.CTPhieuMuonDTO;
 import DTO.CTPhieuTraDTO;
-import DTO.PhieuTraDTO;
 import DTO.SachDTO;
 
 import java.sql.Connection;

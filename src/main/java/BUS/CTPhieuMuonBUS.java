@@ -1,7 +1,6 @@
 package BUS;
 
 import DAO.CTPhieuMuonDAO;
-import DAO.CTPhieuTraDAO;
 import DAO.SachDAO;
 import DTO.CTPhieuMuonDTO;
 import DTO.SachDTO;
@@ -24,6 +23,10 @@ public class CTPhieuMuonBUS {
             int idSach = ctPhieuMuonDTO.getIdSach();
             SachDTO sachDTO = sachDAO.findone(idSach);
             sachDTO.setSoluong(sachDTO.getSoluong() - ctPhieuMuonDTO.getSoLuong());
+            if (sachDTO.getSoluong() == 0) {
+                sachDTO.setTrangthai(SachDTO.TrangThaiSach.HET_SACH.ordinal());
+            }
+
             sachDAO.update(sachDTO);
         } catch (Exception e) {
             e.printStackTrace();
