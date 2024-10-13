@@ -136,7 +136,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         }
 
         if (!Helpler.isOlderThan18(ngaySinh)) {
-            JOptionPane.showMessageDialog(this, "Ngày sinh phải lớn hơn 18 tuổi");
+            JOptionPane.showMessageDialog(this, "Người dùng phải từ 18 tuổi trở lên!");
             return false;
         }
 
@@ -681,6 +681,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
 
         //Get a record with id
         NguoiDocDTO nguoiDocDTO = nguoiDocBus.findOne(id);
+        nguoiDocBus.findAll();
 
         // check if sdt already exist
         for (NguoiDocDTO nguoiDoc : nguoiDocBus.getListNguoiDoc()) {
@@ -843,7 +844,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, String.format("ID %s đã tồn tại", id));
             return;
         }
-
+        nguoiDocBus.findAll();
         // check if sdt already exist
         for (NguoiDocDTO nguoiDoc : nguoiDocBus.getListNguoiDoc()) {
             if (nguoiDoc.getSdt().equals(sdt)) {
