@@ -750,6 +750,16 @@ public class NhanVienGUI extends javax.swing.JPanel {
         String tinhTrangLamViecName = (String) cbTinhTrangLamViec.getSelectedItem();
         int tinhTrangLamViec = NhanVienDTO.TinhTrangLamViec.fromString(tinhTrangLamViecName).ordinal();
 
+        // chekc if cmnd is existed
+        NhanVienBUS nhanVienBUS = new NhanVienBUS();
+        nhanVienBUS.findALl();
+        for (NhanVienDTO nhanVienDTO : nhanVienBUS.getListNhanVien()) {
+            if (nhanVienDTO.getCCCD().equals(cmnd)) {
+                JOptionPane.showMessageDialog(JDialogThem, "Trùng số CCCD");
+                return;
+            }
+        }
+
         NhanVienDTO nhanvienDTO = new NhanVienDTO(id, hoten, ngaysinh, diachi, cmnd, vaiTro, matKhau, tinhTrangLamViec);
         NhanVienBUS nhanvienBUS = new NhanVienBUS();
         TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();

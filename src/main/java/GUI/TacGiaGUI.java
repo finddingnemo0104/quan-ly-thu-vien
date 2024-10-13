@@ -29,15 +29,17 @@ public class TacGiaGUI extends javax.swing.JPanel {
      * Creates new form NguoiDocGUI
      */
     private DefaultTableModel tacGiaTableModel;
+    private TacGiaBUS tacGiaBUS;
 
     public TacGiaGUI() {
         initComponents();
         Helpler.centerCell(jTableTacGia);
+        tacGiaBUS = new TacGiaBUS();
         setTableItemList();
+
     }
 
     public void setTableItemList() {
-        TacGiaBUS tacGiaBUS = new TacGiaBUS();
         tacGiaBUS.findAll();
         setTableItemList(tacGiaBUS);
     }
@@ -124,11 +126,6 @@ public class TacGiaGUI extends javax.swing.JPanel {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         btnXoa = new javax.swing.JButton();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        btnHuyTimKiem = new javax.swing.JButton();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
 
         jDialogSua.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jDialogSua.setMinimumSize(new java.awt.Dimension(400, 400));
@@ -399,18 +396,6 @@ public class TacGiaGUI extends javax.swing.JPanel {
         });
         jPanel2.add(btnXoa);
         jPanel2.add(filler4);
-        jPanel2.add(filler3);
-
-        btnHuyTimKiem.setText("TẢI LẠI");
-        btnHuyTimKiem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHuyTimKiemActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnHuyTimKiem);
-        jPanel2.add(filler2);
-        jPanel2.add(filler6);
-        jPanel2.add(filler7);
 
         jPanel4.add(jPanel2);
 
@@ -468,6 +453,12 @@ public class TacGiaGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXacNhanSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // if select multiple rows, show dialog "Vui lòng chọn 1 dòng để xóa"
+        if (jTableTacGia.getSelectedRowCount() != 1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 dòng để xóa");
+            return;
+        }
+
         int selectedRow = jTableTacGia.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa");
@@ -539,16 +530,19 @@ public class TacGiaGUI extends javax.swing.JPanel {
 //        jDialogTimKiem.setVisible(false);
     }//GEN-LAST:event_btnXacNhanTimActionPerformed
 
-    private void btnHuyTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyTimKiemActionPerformed
-        setTableItemList();
-    }//GEN-LAST:event_btnHuyTimKiemActionPerformed
-
     private void btnXacNhanThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanThemActionPerformed
         if (!checkTextField("them")) {
             return;
         }
         int id = MyConnection.getLastRecordId(TacGiaDAO.TABLE_NAME) + 1;
         String ten = txtHoTenThem.getText();
+
+        TacGiaDTO tacGiaFound = tacGiaBUS.getListTacGia().stream().filter(tacGia -> tacGia.getHoTen().equalsIgnoreCase(ten)).findFirst().orElse(null);
+        if (tacGiaFound != null) {
+            JOptionPane.showMessageDialog(this, "Tác giả đã tồn tại");
+            return;
+        }
+
         TacGiaDTO tacGiaDTO = new TacGiaDTO(id, ten);
         TacGiaBUS tacGiaBUS = new TacGiaBUS();
         tacGiaBUS.insertOne(tacGiaDTO);
@@ -565,7 +559,6 @@ public class TacGiaGUI extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnHuyTimKiem;
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnXacNhanSua;
     private javax.swing.JButton btnXacNhanThem;
@@ -574,12 +567,8 @@ public class TacGiaGUI extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroupTinhTrang;
     private javax.swing.JCheckBox ckbQuaHanSuDung;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
-    private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
-    private javax.swing.Box.Filler filler6;
-    private javax.swing.Box.Filler filler7;
     private javax.swing.JDialog jDialogSua;
     private javax.swing.JDialog jDialogThem;
     private javax.swing.JDialog jDialogTimKiem;

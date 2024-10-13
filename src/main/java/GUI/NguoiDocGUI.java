@@ -678,9 +678,27 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         String hoTen = txtHoTen1.getText();
         String cmnd = txtCMND1.getText();
         NguoiDocBUS nguoiDocBus = new NguoiDocBUS();
+
         //Get a record with id
         NguoiDocDTO nguoiDocDTO = nguoiDocBus.findOne(id);
-        //Change the record columns value
+
+        // check if sdt already exist
+        for (NguoiDocDTO nguoiDoc : nguoiDocBus.getListNguoiDoc()) {
+            if (nguoiDoc.getSdt().equals(sdt) && nguoiDoc.getId() != id) {
+                JOptionPane.showMessageDialog(this, String.format("SDT %s đã tồn tại", sdt));
+                return;
+            }
+        }
+
+        // check if cmnd already exist
+        for (NguoiDocDTO nguoiDoc : nguoiDocBus.getListNguoiDoc()) {
+            if (nguoiDoc.getCCCD().equals(cmnd) && nguoiDoc.getId() != id) {
+                JOptionPane.showMessageDialog(this, String.format("CCCD %s đã tồn tại", cmnd));
+                return;
+            }
+        }
+
+        //Change the record columns valueNGUOI_DOC_3
         nguoiDocDTO.setHoTen(hoTen);
         nguoiDocDTO.setCCCD(cmnd);
         nguoiDocDTO.setDiaChi(diaChi);
@@ -807,6 +825,8 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         if (!checkTextField("them")) {
             return;
         }
+        NguoiDocBUS nguoiDocBus = new NguoiDocBUS();
+
         long id = Long.parseLong(txtIdThem.getText());
         String sdt = txtSDT.getText();
         LocalDate ngaySinh = convertToLocalDateViaMilisecond(txtNgaySinh.getDate());
@@ -818,11 +838,26 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         int soLuongMuonChoPhep = 20;
         int trangThaiViPham = 0;
         NguoiDocDTO nguoiDocDTO = new NguoiDocDTO(id, sdt, ngaySinh, diaChi, hoTen, cmnd, hanSuDung, soLuongMuonChoPhep, trangThaiViPham);
-        NguoiDocBUS nguoiDocBus = new NguoiDocBUS();
 
         if (nguoiDocBus.findOne(id) != null) {
             JOptionPane.showMessageDialog(this, String.format("ID %s đã tồn tại", id));
             return;
+        }
+
+        // check if sdt already exist
+        for (NguoiDocDTO nguoiDoc : nguoiDocBus.getListNguoiDoc()) {
+            if (nguoiDoc.getSdt().equals(sdt)) {
+                JOptionPane.showMessageDialog(this, String.format("Số điện thoại %s đã tồn tại", sdt));
+                return;
+            }
+        }
+
+        // check if cmnd already exist
+        for (NguoiDocDTO nguoiDoc : nguoiDocBus.getListNguoiDoc()) {
+            if (nguoiDoc.getCCCD().equals(cmnd)) {
+                JOptionPane.showMessageDialog(this, String.format("CCCD %s đã tồn tại", cmnd));
+                return;
+            }
         }
 
         nguoiDocBus.insertOne(nguoiDocDTO);

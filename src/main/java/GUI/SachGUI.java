@@ -750,31 +750,52 @@ public class SachGUI extends javax.swing.JPanel {
             return;
         }
         int id = MyConnection.getLastRecordId("SACH") + 1;
-        String ts = txtTenSach.getText();
-        Float g = Float.valueOf(txtGia.getText());
-        int tg = 0;
+        String tenSach = txtTenSach.getText();
+        // tên sách ko được vượt quá 100 ký tự
+        if (tenSach.length() > 100) {
+            JOptionPane.showMessageDialog(this, "Tên sách không được vượt quá 100 ký tự");
+            return;
+        }
+
+
+        Float giaSach = Float.valueOf(txtGia.getText());
+
+        // giaSach > 0 và < 10000000
+        if (giaSach <= 0 || giaSach >= 10000000) {
+            JOptionPane.showMessageDialog(this, "Giá sách phải lớn hơn 0 và nhỏ hơn 10000000");
+            return;
+        }
+
+        int tacGiaId = 0;
         for (int i = 0; i < listTacGia.size(); i++) {
             if (listTacGia.get(i).getHoTen().equalsIgnoreCase(String.valueOf(dbTacGia.getSelectedItem()))) {
-                tg = listTacGia.get(i).getIdTacGia();
+                tacGiaId = listTacGia.get(i).getIdTacGia();
             }
         }
-        int nxb = 0;
+        int nhaXuatBanId = 0;
         for (int i = 0; i < listNhaXuatBan.size(); i++) {
             if (listNhaXuatBan.get(i).getTen().equalsIgnoreCase(String.valueOf(dbNXB.getSelectedItem()))) {
-                nxb = listNhaXuatBan.get(i).getId();
+                nhaXuatBanId = listNhaXuatBan.get(i).getId();
             }
         }
-        int sl = Integer.parseInt(txtSoLuong.getText());
+        int soLuong = Integer.parseInt(txtSoLuong.getText());
+        // Số lượng sách được thêm phải < 99 và > 0
+        if (soLuong <= 0 || soLuong >= 100) {
+            JOptionPane.showMessageDialog(this, "Số lượng sách phải lớn hơn 0 và nhỏ hơn 100");
+            return;
+        }
+
+
 //        int tt = SachDTO.TrangThaiSach.valueOf(cbTrangThai.getSelectedItem().toString()).ordinal();
         int k = 0;
-        int ls = 0;
+        int loaiSachId = 0;
         for (int i = 0; i < listLoaiSach.size(); i++) {
             if (listLoaiSach.get(i).getTenLoai().equalsIgnoreCase(String.valueOf(dbLS.getSelectedItem()))) {
-                ls = listLoaiSach.get(i).getIdLoaiSach();
+                loaiSachId = listLoaiSach.get(i).getIdLoaiSach();
             }
         }
-        System.out.println(ls);
-        SachDTO sachDTO = new SachDTO(id, ts, g, sl, SachDTO.TrangThaiSach.DANG_NHAP_KHO.ordinal(), tg, nxb, ls);
+        System.out.println(loaiSachId);
+        SachDTO sachDTO = new SachDTO(id, tenSach, giaSach, soLuong, SachDTO.TrangThaiSach.DANG_NHAP_KHO.ordinal(), tacGiaId, nhaXuatBanId, loaiSachId);
         SachBUS sachBUS = new SachBUS();
         sachBUS.insertone(sachDTO);
         setTableItemList();

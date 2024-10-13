@@ -833,13 +833,21 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXemActionPerformed
 
     private void btnXacNhanThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanThemActionPerformed
-        Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "ID người đọc", jDialogThem);
-        Helpler.checkTextFieldNumber(txtIdSachThem, "ID sách", jDialogThem);
+        if (!Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "Id người đọc", jDialogThem)) {
+            return;
+        }
+
         long idNguoiDoc = Long.parseLong(txtIdNguoiDocThem.getText());
         NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
         NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(idNguoiDoc);
         if (nguoiDocDTO == null) {
             JOptionPane.showMessageDialog(jDialogThem, "Nguoi doc id = " + idNguoiDoc + " khong ton tai");
+            return;
+        }
+
+        // if listCTPhieuMuon is empty
+        if (newPhieuMuonDTO.getListCTPhieuMuon().isEmpty()) {
+            JOptionPane.showMessageDialog(jDialogThem, "Danh sách mượn không được để trống");
             return;
         }
 
@@ -889,6 +897,9 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXacNhanThemActionPerformed
 
     private void btnThemVaoCTMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemVaoCTMuonActionPerformed
+        if (!Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "Id người đọc", jDialogThem)) {
+            return;
+        }
         if (!Helpler.checkTextFieldNumber(txtIdSachThem, "ID sách", jDialogThem)) {
             return;
         }
@@ -896,8 +907,22 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(jDialogThem, "Vui lòng nhập số lượng mượn");
             return;
         }
+
+        if (!Helpler.checkTextFieldNumber(txtIdSoLuong, "Số lượng mượn", jDialogThem)) {
+            return;
+        }
+
         int idSach = Integer.parseInt(txtIdSachThem.getText());
         SachDTO sachDTO = new SachBUS().findone(idSach);
+        long idNguoiDoc = Long.parseLong(txtIdNguoiDocThem.getText());
+        NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
+        NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(idNguoiDoc);
+
+        if (nguoiDocDTO == null) {
+            JOptionPane.showMessageDialog(jDialogThem, "Nguoi doc id = " + idNguoiDoc + " khong ton tai");
+            return;
+        }
+
         if (sachDTO == null) {
             JOptionPane.showMessageDialog(jDialogThem, "Sách id = " + idSach + " không tồn tại");
             return;
@@ -958,23 +983,36 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
             return;
         }
 
+
         int idPhieu, idNhanVien;
         long idNguoiDoc;
         if (txtIDPhieuTimKiem.getText().isEmpty()) {
             idPhieu = -1;
         } else {
+            if (!Helpler.checkTextFieldNumber(txtIDPhieuTimKiem, "ID phiếu", jDialogTimKiem)) {
+                return;
+            }
+
             idPhieu = Integer.parseInt(txtIDPhieuTimKiem.getText());
         }
 
         if (txtIDNguoiDocTimKiem.getText().isEmpty()) {
             idNguoiDoc = -1;
         } else {
+            if (!Helpler.checkTextFieldNumber(txtIDNguoiDocTimKiem, "ID người đọc", jDialogTimKiem)) {
+                return;
+            }
+
             idNguoiDoc = Long.parseLong(txtIDNguoiDocTimKiem.getText());
         }
 
         if (txtIDNhanVienTimKiem.getText().isEmpty()) {
             idNhanVien = -1;
         } else {
+            if (!Helpler.checkTextFieldNumber(txtIDNhanVienTimKiem, "ID nhân viên", jDialogTimKiem)) {
+                return;
+            }
+
             idNhanVien = Integer.parseInt(txtIDNhanVienTimKiem.getText());
         }
 
@@ -1105,6 +1143,11 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
                 soLuongTra = (int) jTableXacNhanCTPhieuTra.getValueAt(row, 3);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Chưa nhập số lượng trả ở sách id = " + idSach);
+                return;
+            }
+
+            if (soLuongTra < 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng trả không được âm");
                 return;
             }
 

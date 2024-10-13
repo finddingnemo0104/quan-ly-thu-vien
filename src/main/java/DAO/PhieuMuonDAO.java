@@ -151,7 +151,7 @@ public class PhieuMuonDAO {
                      + " WHERE ";
             ArrayList<String> queries = new ArrayList<>();
             if (id != -1) {
-                queries.add("id = " + id + " ");
+                queries.add("PHIEU_MUON.id = " + id + " ");
             }
             if (idNguoiDoc != -1) {
                 queries.add("idNguoiDoc = " + idNguoiDoc + " ");
