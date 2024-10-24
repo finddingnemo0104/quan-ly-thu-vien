@@ -321,6 +321,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
 
         txtTienPhatXem.setEnabled(false);
 
+        jDateChooserNgayTraXem.setEnabled(false);
         jDateChooserNgayTraXem.setFocusable(false);
 
         javax.swing.GroupLayout jDialogXemChiTietLayout = new javax.swing.GroupLayout(jDialogXemChiTiet.getContentPane());
@@ -737,24 +738,60 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         if (txtIDPhieuTimKiem.getText().isEmpty()) {
             idPhieu = -1;
         } else {
+            // id <= 256 characters
+            if (txtIDPhieuTimKiem.getText().length() > 256) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "ID phiếu không được vượt quá 256 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtIDPhieuTimKiem, "ID phiếu", jDialogTimKiem)) {
+                return;
+            }
+
             idPhieu = Integer.parseInt(txtIDPhieuTimKiem.getText());
         }
 
         if (txtIDNguoiDocTimKiem.getText().isEmpty()) {
             idNguoiDoc = -1;
         } else {
+            if (txtIDNguoiDocTimKiem.getText().length() > 256) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "ID người đọc không được vượt quá 256 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtIDNguoiDocTimKiem, "ID người đọc", jDialogTimKiem)) {
+                return;
+            }
+
             idNguoiDoc = Long.parseLong(txtIDNguoiDocTimKiem.getText());
         }
 
         if (txtTienPhatTimKiemFrom.getText().isEmpty()) {
             tienPhatFrom = -1;
         } else {
+            if (txtTienPhatTimKiemFrom.getText().length() > 10) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "Tiền phạt không được vượt quá 10 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtTienPhatTimKiemFrom, "Tiền phạt", jDialogTimKiem)) {
+                return;
+            }
+
             tienPhatFrom = Integer.parseInt(txtTienPhatTimKiemFrom.getText());
         }
 
         if (txtTienPhatTimKiemTo.getText().isEmpty()) {
             tienPhatTo = -1;
         } else {
+            if (txtTienPhatTimKiemTo.getText().length() > 10) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "Tiền phạt không được vượt quá 10 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtTienPhatTimKiemTo, "Tiền phạt", jDialogTimKiem)) {
+                return;
+            }
             tienPhatTo = Integer.parseInt(txtTienPhatTimKiemTo.getText());
         }
 

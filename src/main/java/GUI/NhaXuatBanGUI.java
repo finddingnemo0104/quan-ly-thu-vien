@@ -95,10 +95,23 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập họ tên");
             return false;
         }
+        // HỌ teen <= 256 ký tự
+        if (hoTen.length() > 256) {
+            JOptionPane.showMessageDialog(this, "Họ tên không được quá 256 ký tự");
+            return false;
+        }
+
         if (isEmptyString(diaChi)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ");
             return false;
         }
+        // địa chỉ <= 256 ký tự
+        if (diaChi.length() > 256) {
+            JOptionPane.showMessageDialog(this, "Địa chỉ không được quá 256 ký tự");
+            return false;
+        }
+
+
         if (isEmptyString(sdt)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập SDT");
             return false;
@@ -120,6 +133,11 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
 
         if (!Helpler.isValidEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không đúng định dạng");
+            return false;
+        }
+        // Email <= 256 ký tự
+        if (email.length() > 256) {
+            JOptionPane.showMessageDialog(this, "Email không được quá 256 ký tự");
             return false;
         }
 
@@ -185,11 +203,6 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         btnXoa = new javax.swing.JButton();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        btnHuyTimKiem = new javax.swing.JButton();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
 
         jDialogSua.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jDialogSua.setMinimumSize(new java.awt.Dimension(400, 400));
@@ -488,19 +501,6 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
         });
         jPanel2.add(btnXoa);
         jPanel2.add(filler4);
-        jPanel2.add(filler3);
-
-        btnHuyTimKiem.setText("TẢI LẠI");
-        btnHuyTimKiem.setPreferredSize(new java.awt.Dimension(80, 23));
-        btnHuyTimKiem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHuyTimKiemActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnHuyTimKiem);
-        jPanel2.add(filler2);
-        jPanel2.add(filler6);
-        jPanel2.add(filler7);
 
         jPanel4.add(jPanel2);
 
@@ -637,26 +637,38 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
             return;
         }
 
+        // ho ten <= 256 ky tu
+        if (!isEmptyString(hoTenTimKiem) && hoTenTimKiem.length() > 256) {
+            JOptionPane.showMessageDialog(jDialogTimKiem, "Họ tên không được quá 256 ký tự");
+            return;
+        }
+
         NhaXuatBanBUS nhaXuatBanBUS = new NhaXuatBanBUS();
 //        nhaXuatBanBUS.findMany(hoTenTimKiem, quaHanSuDung, trangThai);
         setTableItemList(nhaXuatBanBUS);
         jDialogTimKiem.setVisible(false);
     }//GEN-LAST:event_btnXacNhanTimActionPerformed
 
-    private void btnHuyTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyTimKiemActionPerformed
-        setTableItemList();
-    }//GEN-LAST:event_btnHuyTimKiemActionPerformed
-
     private void btnXacNhanThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanThemActionPerformed
         if (!checkTextField("them")) {
             return;
         }
         int id = MyConnection.getLastRecordId(NhaXuatBanDTO.TABLE_NAME) + 1;
-        String sdt = txtDiaChi.getText();
-        String diaChi = txtSDT.getText();
+        String sdt = txtSDT.getText();
+        String diaChi = txtDiaChi.getText();
         String ten = txtTen.getText();
-        NhaXuatBanDTO nhaXuatBanDTO = new NhaXuatBanDTO(id, ten, diaChi, sdt, txtEmail.getText());
+
+        // check if sdt is already exist
         NhaXuatBanBUS nhaXuatBanBUS = new NhaXuatBanBUS();
+        nhaXuatBanBUS.findAll();
+        for (NhaXuatBanDTO nhaXuatBanDTO : nhaXuatBanBUS.getListNhaXuatBan()) {
+            if (nhaXuatBanDTO.getSdt().equals(sdt)) {
+                JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại");
+                return;
+            }
+        }
+
+        NhaXuatBanDTO nhaXuatBanDTO = new NhaXuatBanDTO(id, ten, diaChi, sdt, txtEmail.getText());
         nhaXuatBanBUS.insertOne(nhaXuatBanDTO);
         setTableItemList();
         clearAllTextField();
@@ -675,7 +687,6 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnHuyTimKiem;
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnXacNhanSua;
     private javax.swing.JButton btnXacNhanThem;
@@ -684,12 +695,8 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroupTinhTrang;
     private javax.swing.JCheckBox ckbQuaHanSuDung;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
-    private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
     private javax.swing.Box.Filler filler5;
-    private javax.swing.Box.Filler filler6;
-    private javax.swing.Box.Filler filler7;
     private javax.swing.JDialog jDialogSua;
     private javax.swing.JDialog jDialogThem;
     private javax.swing.JDialog jDialogTimKiem;

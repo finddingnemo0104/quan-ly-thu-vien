@@ -25,7 +25,7 @@ public class SachDAO {
           sachDTO =new SachDTO(
                 rs.getInt("id"),
                 rs.getString("tenSach"),
-                rs.getFloat("giaSach"),
+                rs.getInt("giaSach"),
                 rs.getInt("soluong"),
                 rs.getInt("trangthai"),
                 rs.getInt("idTacGia"),
@@ -48,7 +48,7 @@ public class SachDAO {
             PreparedStatement ps = con.prepareStatement(queryInsert);
             ps.setInt(1, sach.getId());
             ps.setString(2, sach.getTenSach());
-            ps.setFloat(3, sach.getGiaSach());
+            ps.setInt(3, sach.getGiaSach());
             ps.setInt(4, sach.getSoluong());
             ps.setInt(5, sach.getTrangthai());
             ps.setInt(6, sach.getIdTacGia());
@@ -75,7 +75,7 @@ public class SachDAO {
                 SachDTO sach = new SachDTO(
                     rs.getInt("id"),
                     rs.getString("tenSach"),
-                    rs.getFloat("giaSach"),
+                    rs.getInt("giaSach"),
                     rs.getInt("soluong"),
                     rs.getInt("trangthai"),
                     rs.getInt("idTacGia"),
@@ -108,7 +108,7 @@ public class SachDAO {
                 SachDTO sach = new SachDTO(
                         rs.getInt("id"),
                         rs.getString("tenSach"),
-                        rs.getFloat("giaSach"),
+                        rs.getInt("giaSach"),
                         rs.getInt("soluong"),
                         rs.getInt("trangthai"),
                         rs.getInt("idTacGia"),

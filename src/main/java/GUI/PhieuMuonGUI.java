@@ -833,13 +833,21 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXemActionPerformed
 
     private void btnXacNhanThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanThemActionPerformed
-        Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "ID người đọc", jDialogThem);
-        Helpler.checkTextFieldNumber(txtIdSachThem, "ID sách", jDialogThem);
+        if (!Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "Id người đọc", jDialogThem)) {
+            return;
+        }
+
         long idNguoiDoc = Long.parseLong(txtIdNguoiDocThem.getText());
         NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
         NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(idNguoiDoc);
         if (nguoiDocDTO == null) {
             JOptionPane.showMessageDialog(jDialogThem, "Nguoi doc id = " + idNguoiDoc + " khong ton tai");
+            return;
+        }
+
+        // if listCTPhieuMuon is empty
+        if (newPhieuMuonDTO.getListCTPhieuMuon().isEmpty()) {
+            JOptionPane.showMessageDialog(jDialogThem, "Danh sách mượn không được để trống");
             return;
         }
 
@@ -889,6 +897,9 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXacNhanThemActionPerformed
 
     private void btnThemVaoCTMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemVaoCTMuonActionPerformed
+        if (!Helpler.checkTextFieldNumber(txtIdNguoiDocThem, "Id người đọc", jDialogThem)) {
+            return;
+        }
         if (!Helpler.checkTextFieldNumber(txtIdSachThem, "ID sách", jDialogThem)) {
             return;
         }
@@ -896,8 +907,22 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(jDialogThem, "Vui lòng nhập số lượng mượn");
             return;
         }
+
+        if (!Helpler.checkTextFieldNumber(txtIdSoLuong, "Số lượng mượn", jDialogThem)) {
+            return;
+        }
+
         int idSach = Integer.parseInt(txtIdSachThem.getText());
         SachDTO sachDTO = new SachBUS().findone(idSach);
+        long idNguoiDoc = Long.parseLong(txtIdNguoiDocThem.getText());
+        NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
+        NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(idNguoiDoc);
+
+        if (nguoiDocDTO == null) {
+            JOptionPane.showMessageDialog(jDialogThem, "Nguoi doc id = " + idNguoiDoc + " khong ton tai");
+            return;
+        }
+
         if (sachDTO == null) {
             JOptionPane.showMessageDialog(jDialogThem, "Sách id = " + idSach + " không tồn tại");
             return;
@@ -958,23 +983,52 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
             return;
         }
 
+
         int idPhieu, idNhanVien;
         long idNguoiDoc;
         if (txtIDPhieuTimKiem.getText().isEmpty()) {
             idPhieu = -1;
         } else {
+            // id <= 256 character
+            if (txtIDPhieuTimKiem.getText().length() > 256) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "ID phiếu không được quá 256 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtIDPhieuTimKiem, "ID phiếu", jDialogTimKiem)) {
+                return;
+            }
+
             idPhieu = Integer.parseInt(txtIDPhieuTimKiem.getText());
         }
 
         if (txtIDNguoiDocTimKiem.getText().isEmpty()) {
             idNguoiDoc = -1;
         } else {
+            if (txtIDNguoiDocTimKiem.getText().length() > 256) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "ID người đọc không được quá 256 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtIDNguoiDocTimKiem, "ID người đọc", jDialogTimKiem)) {
+                return;
+            }
+
             idNguoiDoc = Long.parseLong(txtIDNguoiDocTimKiem.getText());
         }
 
         if (txtIDNhanVienTimKiem.getText().isEmpty()) {
             idNhanVien = -1;
         } else {
+            if (txtIDNhanVienTimKiem.getText().length() > 256) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "ID nhân viên không được quá 256 ký tự");
+                return;
+            }
+
+            if (!Helpler.checkTextFieldNumber(txtIDNhanVienTimKiem, "ID nhân viên", jDialogTimKiem)) {
+                return;
+            }
+
             idNhanVien = Integer.parseInt(txtIDNhanVienTimKiem.getText());
         }
 
@@ -1108,6 +1162,11 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
                 return;
             }
 
+            if (soLuongTra < 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng trả không được âm");
+                return;
+            }
+
             if (soLuongTra > soLuongMuon) {
                 JOptionPane.showMessageDialog(this, "Số lượng trả lớn hơn số lượng mượn");
                 return;
@@ -1191,45 +1250,61 @@ public class PhieuMuonGUI extends javax.swing.JPanel {
         PhieuMuonDTO phieuMuonDTO = phieuMuonBUS.findOne(idPhieuMuon);
         CTPhieuMuonBUS ctPhieuMuonBUS = new CTPhieuMuonBUS();
         PhieuTraBUS phieuTraBUS = new PhieuTraBUS();
-
-        if (phieuTraBUS.findByIdPhieuMuon(idPhieuMuon) != null) {
-            JOptionPane.showMessageDialog(this, "Không thể xóa phiếu mượn vì đang có phiếu trả");
-        }
-
-        if (phieuMuonDTO.getTinhTrang() == PhieuMuonDTO.TinhTrang.CHUA_TRA) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Còn sách chưa trả, bạn có chắc muốn xoá không?");
-            if (confirm == JOptionPane.NO_OPTION || confirm == JOptionPane.CLOSED_OPTION) {
-                return;
-            }
-        } else {
-            if (!Helpler.showConfirmDialog(this,
-                    String.format("Bạn có chắc chắn muốn xoá phiếu mượn có ID = %s không?", idPhieuMuon), "Xoá phiếu mượn")) {
-                return;
-            }
-        }
         SachBUS sachBUS = new SachBUS();
         NguoiDocBUS nguoiDocBUS = new NguoiDocBUS();
 
         Map<CTPhieuMuonDTO, SachDTO> listCTPhieuMuonVaSach = ctPhieuMuonBUS.findManyJoinSach(idPhieuMuon);
+        if (phieuMuonDTO.getTinhTrang() == PhieuMuonDTO.TinhTrang.CHUA_TRA) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Còn sách chưa trả, bạn có chắc muốn xoá không?");
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        } else if (phieuMuonDTO.getTinhTrang() == PhieuMuonDTO.TinhTrang.DA_TRA || phieuMuonDTO.getTinhTrang() == PhieuMuonDTO.TinhTrang.TRA_THIEU) {
+            String message = "Phiếu mượn đã trả, bạn có chắc muốn xoá không?";
+            if (phieuMuonDTO.getTinhTrang() == PhieuMuonDTO.TinhTrang.TRA_THIEU) {
+                message = "Phiếu mượn trả thiếu, bạn có chắc muốn xoá không?";
+            }
+            int confirm = JOptionPane.showConfirmDialog(this, message);
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+            // Xoá phiếu trả liên quan kèm theo cập nhât số lượng sách và số lượng mượn của người đọc
+            PhieuTraDTO phieuTraDTO = phieuTraBUS.findByIdPhieuMuon(idPhieuMuon);
+            CTPhieuTraBUS ctPhieuTraBUS = new CTPhieuTraBUS();
+            phieuTraDTO.getListCTPhieuTra().forEach(ctPhieuTraDTO -> {
+                // update so luong sach
+                SachDTO sachDTO = sachBUS.findone(ctPhieuTraDTO.getIdSach());
+                sachDTO.setSoluong(sachDTO.getSoluong() - ctPhieuTraDTO.getSoLuong());
+                if (sachDTO.getSoluong() == 0) {
+                    sachDTO.setTrangthai(SachDTO.TrangThaiSach.HET_SACH.ordinal());
+                }
+                sachBUS.update(sachDTO);
+
+                // cap nhat so luong muon cua nguoi doc
+                NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(phieuTraDTO.getIdNguoiDoc());
+                nguoiDocDTO.setSoLuongMuonChoPhep(nguoiDocDTO.getSoLuongMuonChoPhep() - ctPhieuTraDTO.getSoLuong());
+                nguoiDocBUS.updateOne(nguoiDocDTO);
+                ctPhieuTraBUS.deleteOne(ctPhieuTraDTO.getIdSach(), ctPhieuTraDTO.getIdPhieuTra());
+            });
+        }
+
         // Delete all ctphieumuon link to phieumuon
         listCTPhieuMuonVaSach.forEach(((ctPhieuMuonDTO, sachDTO) -> {
             sachDTO.setSoluong(sachDTO.getSoluong() + ctPhieuMuonDTO.getSoLuong());
-            if (sachDTO.getTrangThaiSach() == SachDTO.TrangThaiSach.HET_SACH) {
+            if (sachDTO.getTrangThaiSach() == SachDTO.TrangThaiSach.HET_SACH && sachDTO.getSoluong() > 0) {
                 sachDTO.setTrangthai(SachDTO.TrangThaiSach.CO_THE_MUON.ordinal());
             }
-            NguoiDocDTO nguoiDocDTO = new NguoiDocDTO();
+            NguoiDocDTO nguoiDocDTO = nguoiDocBUS.findOne(phieuMuonDTO.getId_ND());
             nguoiDocDTO.setSoLuongMuonChoPhep(nguoiDocDTO.getSoLuongMuonChoPhep() + ctPhieuMuonDTO.getSoLuong());
             nguoiDocBUS.updateOne(nguoiDocDTO);
             sachBUS.update(sachDTO);
             ctPhieuMuonBUS.deleteOne(ctPhieuMuonDTO.getIdSach(), ctPhieuMuonDTO.getIdPhieuMuon());
         }));
-
-
         // delete phieuMuon
         phieuMuonBUS.deleteOne(phieuMuonDTO.getId_pm());
+        JOptionPane.showMessageDialog(this, "Xoá thành công");
 
         setTableItemList();
-        JOptionPane.showMessageDialog(this, "Xoá thành công");
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnThemSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemSachActionPerformed

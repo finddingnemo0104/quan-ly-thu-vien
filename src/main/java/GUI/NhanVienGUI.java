@@ -105,9 +105,25 @@ public class NhanVienGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập họ tên");
             return false;
         }
+        // Họ tên <= 256 ký tự
+        if (hoten.length() > 256) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập họ tên nhỏ hơn 256 ký tự");
+            return false;
+        }
+
         // Kiểm tra ngày sinh
         if (ngaysinh == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập ngày sinh");
+            return false;
+        }
+
+        // Ngày sinh > 18 tuổi và < 100 tuổi
+        if (!Helpler.isOlderThan18(ngaysinh)) {
+            JOptionPane.showMessageDialog(this, "Nhân viên phải trên 18 tuổi");
+            return false;
+        }
+        if (!Helpler.isYoungerThan100(ngaysinh)) {
+            JOptionPane.showMessageDialog(this, "Nhân viên phải dưới 100 tuổi");
             return false;
         }
 
@@ -115,6 +131,12 @@ public class NhanVienGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ");
             return false;
         }
+        // Địa chỉ <= 256 ký tự
+        if (diachi.length() > 256) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ nhỏ hơn 256 ký tự");
+            return false;
+        }
+
         // Kiểm tra cmnd
         if (cmnd.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập CMND");
@@ -750,6 +772,16 @@ public class NhanVienGUI extends javax.swing.JPanel {
         String tinhTrangLamViecName = (String) cbTinhTrangLamViec.getSelectedItem();
         int tinhTrangLamViec = NhanVienDTO.TinhTrangLamViec.fromString(tinhTrangLamViecName).ordinal();
 
+        // chekc if cmnd is existed
+        NhanVienBUS nhanVienBUS = new NhanVienBUS();
+        nhanVienBUS.findALl();
+        for (NhanVienDTO nhanVienDTO : nhanVienBUS.getListNhanVien()) {
+            if (nhanVienDTO.getCCCD().equals(cmnd)) {
+                JOptionPane.showMessageDialog(JDialogThem, "Trùng số CCCD");
+                return;
+            }
+        }
+
         NhanVienDTO nhanvienDTO = new NhanVienDTO(id, hoten, ngaysinh, diachi, cmnd, vaiTro, matKhau, tinhTrangLamViec);
         NhanVienBUS nhanvienBUS = new NhanVienBUS();
         TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
@@ -811,7 +843,14 @@ public class NhanVienGUI extends javax.swing.JPanel {
             boolean itNhat1DieuKien = false;
             int id, tinhTrang, vaiTro;
             String hoTen = "";
+
             if (!jTxtIDTimKiem.getText().isEmpty()) {
+                // id <= 256 để tránh trường hợp nhập số quá lớn
+                if (jTxtIDTimKiem.getText().length() > 256) {
+                    JOptionPane.showMessageDialog(JDialogTimKiem, "ID không được quá 256 ký tự");
+                    return;
+                }
+
                 id = Integer.parseInt(jTxtIDTimKiem.getText());
                 itNhat1DieuKien = true;
             } else {
@@ -819,6 +858,12 @@ public class NhanVienGUI extends javax.swing.JPanel {
             }
             if (!jTxtHotenTimKiem.getText().isEmpty()) {
                 hoTen = jTxtHotenTimKiem.getText();
+
+                if (hoTen.length() > 256) {
+                    JOptionPane.showMessageDialog(JDialogTimKiem, "Họ tên không được quá 256 ký tự");
+                    return;
+                }
+
                 itNhat1DieuKien = true;
             }
 

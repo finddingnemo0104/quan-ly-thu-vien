@@ -65,10 +65,10 @@ public class PhieuTraDAO {
                 "WHERE ";
         ArrayList<String> queries = new ArrayList<>();
         if (id != -1) {
-            queries.add(String.format("id = %d \n", id));
+            queries.add(String.format("PHIEU_TRA.id = %d \n", id));
         }
         if (idNguoiDoc != -1) {
-            queries.add(String.format("idNguoiDoc = %d \n", idNguoiDoc));
+            queries.add(String.format("PHIEU_TRA.idNguoiDoc = %d \n", idNguoiDoc));
         }
         if (ngayTraFrom != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

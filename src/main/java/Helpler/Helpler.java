@@ -88,6 +88,19 @@ public class Helpler {
         return ngaySinh.before(date18YearsAgo);
     }
 
+    // is younger than 100
+    public static boolean isYoungerThan100(Date ngaySinh) {
+        // Get the current date
+        Calendar cal = Calendar.getInstance();
+
+        // Subtract 100 years from the current date
+        cal.add(Calendar.YEAR, -100);
+        Date date100YearsAgo = cal.getTime();
+
+        // Check if ngaySinh is after the date 100 years ago
+        return ngaySinh.after(date100YearsAgo);
+    }
+
     public static void setUIFont(javax.swing.plaf.FontUIResource f) {
         java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {

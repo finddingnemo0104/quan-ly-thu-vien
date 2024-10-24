@@ -132,6 +132,11 @@ public class SachGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sách");
             return false;
         }
+        // tên sách ko được vượt quá 256 ký tự
+        if (ts.length() > 256) {
+            JOptionPane.showMessageDialog(this, "Tên sách không được vượt quá 100 ký tự");
+            return false;
+        }
 
         // Kiểm tra trường giá
         if (isEmptyString(g)) {
@@ -142,12 +147,40 @@ public class SachGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Giá chỉ được nhập số");
             return false;
         }
+        // giá <= 256 ký tự
+        if (g.length() > 9) {
+            JOptionPane.showMessageDialog(this, "Giá sách không được vượt quá 100,000,000");
+            return false;
+        }
+
+        int giaSach = Integer.parseInt(g);
+        // giaSach > 0 và < 1 000 000 000
+        if (giaSach <= 0 || giaSach >= 1000000000) {
+            JOptionPane.showMessageDialog(this, "Giá sách phải lớn hơn 0 và không được vượt quá 100,000,000");
+            return false;
+        }
 
         // Kiểm tra trường số lượng
+        if (isEmptyString(sl)) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng");
+            return false;
+        }
         if (!sl.matches("[0-9]+")) {
             JOptionPane.showMessageDialog(this, "Số lượng chỉ được nhập số");
             return false;
         }
+        if (sl.length() > 7) {
+            JOptionPane.showMessageDialog(this, "Số lượng sách tối đa là 1,000,000");
+            return false;
+        }
+
+        int soLuong = Integer.parseInt(sl);
+        // soLuong > 0 và < 1000000
+        if (soLuong <= 0 || soLuong >= 1000000) {
+            JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0 và nhỏ hơn 1,000,000");
+            return false;
+        }
+
         return true;
     }
 
@@ -750,31 +783,36 @@ public class SachGUI extends javax.swing.JPanel {
             return;
         }
         int id = MyConnection.getLastRecordId("SACH") + 1;
-        String ts = txtTenSach.getText();
-        Float g = Float.valueOf(txtGia.getText());
-        int tg = 0;
+        String tenSach = txtTenSach.getText();
+        Integer giaSach = Integer.valueOf(txtGia.getText());
+
+        int tacGiaId = 0;
         for (int i = 0; i < listTacGia.size(); i++) {
             if (listTacGia.get(i).getHoTen().equalsIgnoreCase(String.valueOf(dbTacGia.getSelectedItem()))) {
-                tg = listTacGia.get(i).getIdTacGia();
+                tacGiaId = listTacGia.get(i).getIdTacGia();
             }
         }
-        int nxb = 0;
+        int nhaXuatBanId = 0;
         for (int i = 0; i < listNhaXuatBan.size(); i++) {
             if (listNhaXuatBan.get(i).getTen().equalsIgnoreCase(String.valueOf(dbNXB.getSelectedItem()))) {
-                nxb = listNhaXuatBan.get(i).getId();
+                nhaXuatBanId = listNhaXuatBan.get(i).getId();
             }
         }
-        int sl = Integer.parseInt(txtSoLuong.getText());
+        int soLuong = Integer.parseInt(txtSoLuong.getText());
+        // Số lượng sách được thêm phải < 99 và > 0
+        if (soLuong <= 0 || soLuong >= 100) {
+            JOptionPane.showMessageDialog(this, "Số lượng sách phải lớn hơn 0 và nhỏ hơn 100");
+            return;
+        }
 //        int tt = SachDTO.TrangThaiSach.valueOf(cbTrangThai.getSelectedItem().toString()).ordinal();
         int k = 0;
-        int ls = 0;
+        int loaiSachId = 0;
         for (int i = 0; i < listLoaiSach.size(); i++) {
             if (listLoaiSach.get(i).getTenLoai().equalsIgnoreCase(String.valueOf(dbLS.getSelectedItem()))) {
-                ls = listLoaiSach.get(i).getIdLoaiSach();
+                loaiSachId = listLoaiSach.get(i).getIdLoaiSach();
             }
         }
-        System.out.println(ls);
-        SachDTO sachDTO = new SachDTO(id, ts, g, sl, SachDTO.TrangThaiSach.DANG_NHAP_KHO.ordinal(), tg, nxb, ls);
+        SachDTO sachDTO = new SachDTO(id, tenSach, giaSach, soLuong, SachDTO.TrangThaiSach.DANG_NHAP_KHO.ordinal(), tacGiaId, nhaXuatBanId, loaiSachId);
         SachBUS sachBUS = new SachBUS();
         sachBUS.insertone(sachDTO);
         setTableItemList();
@@ -915,7 +953,7 @@ public class SachGUI extends javax.swing.JPanel {
         // Get value in text field
         int id = Integer.parseInt(txtIDSua.getText());
         String ts = txtTSSua.getText();
-        Float g = Float.valueOf(txtGSua.getText());
+        Integer g = Integer.valueOf(txtGSua.getText());
         int tg = 0;
         for (int i = 0; i < listTacGia.size(); i++) {
             if (listTacGia.get(i).getHoTen().equalsIgnoreCase(String.valueOf(cbTacGiaSua.getSelectedItem()))) {
@@ -1000,12 +1038,23 @@ public class SachGUI extends javax.swing.JPanel {
             int loaisach = -1;
             int giaTienFrom, giaTienTo;
             if (!txtID2.getText().isEmpty()) {
+                // id <= 256 ký tự
+                if (txtID2.getText().length() > 256) {
+                    JOptionPane.showMessageDialog(jDialogTimKiem, "id không được quá 256 ký tự");
+                    return;
+                }
+
                 id = Integer.parseInt(txtID2.getText());
                 itNhat1DieuKien = true;
             } else {
                 id = -1;
             }
             if (!txtTS2.getText().isEmpty()) {
+                if (txtTS2.getText().length() > 256) {
+                    JOptionPane.showMessageDialog(jDialogTimKiem, "Tên sách không được quá 256 ký tự");
+                    return;
+                }
+
                 tensach = txtTS2.getText();
                 itNhat1DieuKien = true;
             }
@@ -1021,22 +1070,45 @@ public class SachGUI extends javax.swing.JPanel {
             if (txtGiaSachFrom.getText().isEmpty()) {
                 giaTienFrom = -1;
             } else {
-                giaTienFrom = Integer.parseInt(txtGiaSachFrom.getText());
-                if (giaTienFrom < 0) {
-                    JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách không được < 0");
+                // Giá tiền <= 10 ký tự
+                if (txtGiaSachFrom.getText().length() > 10) {
+                    JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách không được quá 100,000,000 VND");
                     return;
                 }
+
+
+                try {
+                    giaTienFrom = Integer.parseInt(txtGiaSachFrom.getText());
+                    if (giaTienFrom < 0 || giaTienFrom > 100000000) {
+                        JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách không được < 0 và > 100,000,000 VNĐ");
+                        return;
+                    }
+                } catch (NumberFormatException ignored) {
+                    JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách chỉ được nhập chữ số");
+                    return;
+                }
+
                 itNhat1DieuKien = true;
             }
 
             if (txtGiaSachTo.getText().isEmpty()) {
                 giaTienTo = -1;
             } else {
-                giaTienTo = Integer.parseInt(txtGiaSachTo.getText());
-                if (giaTienTo < 0) {
-                    JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách không được < 0");
+                if (txtGiaSachTo.getText().length() > 9) {
+                    JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách không được vượt quá 100,000,000 VNĐ");
                     return;
                 }
+                try {
+                    giaTienTo = Integer.parseInt(txtGiaSachTo.getText());
+                    if (giaTienTo < 0 || giaTienTo > 100000000) {
+                        JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách không được < 0 và > 100,000,000 VNĐ");
+                        return;
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách chỉ được nhập chữ số");
+                    return;
+                }
+
                 itNhat1DieuKien = true;
             }
 
@@ -1057,7 +1129,7 @@ public class SachGUI extends javax.swing.JPanel {
             jDialogTimKiem.setVisible(false);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(jDialogTimKiem, "id chỉ được nhập chữ số");
+            JOptionPane.showMessageDialog(jDialogTimKiem, "Giá sách chỉ được nhập chữ số");
         }
     }//GEN-LAST:event_btnXacNhanTImActionPerformed
 

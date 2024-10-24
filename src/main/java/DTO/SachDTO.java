@@ -36,7 +36,7 @@ public class SachDTO {
 
     int id;
     String tenSach;
-    float giaSach;
+    int giaSach;
     int soluong;
     TrangThaiSach trangthai;
     int idTacGia;
@@ -49,7 +49,7 @@ public class SachDTO {
     public SachDTO() {
     }
 
-    public SachDTO(int id, String tenSach, float giaSach, int soluong, int trangthai, int idTacGia, int idNhaXuatBan, int idLoaiSach) {
+    public SachDTO(int id, String tenSach, int giaSach, int soluong, int trangthai, int idTacGia, int idNhaXuatBan, int idLoaiSach) {
         this.id = id;
         this.tenSach = tenSach;
         this.giaSach = giaSach;
@@ -62,7 +62,7 @@ public class SachDTO {
         this.nhaXuatBan = new NhaXuatBanDTO();
     }
 
-    public SachDTO(int id, String tenSach, float giaSach, int soluong, int trangthai, int idTacGia, int idNhaXuatBan, int idLoaiSach, String tenTacGia, String tenNhaXuatBan) {
+    public SachDTO(int id, String tenSach, int giaSach, int soluong, int trangthai, int idTacGia, int idNhaXuatBan, int idLoaiSach, String tenTacGia, String tenNhaXuatBan) {
         this.id = id;
         this.tenSach = tenSach;
         this.giaSach = giaSach;
@@ -93,11 +93,11 @@ public class SachDTO {
         this.tenSach = tenSach;
     }
 
-    public float getGiaSach() {
+    public int getGiaSach() {
         return giaSach;
     }
 
-    public void setGiaSach(float giaSach) {
+    public void setGiaSach(int giaSach) {
         this.giaSach = giaSach;
     }
 
