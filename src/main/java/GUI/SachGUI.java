@@ -166,7 +166,7 @@ public class SachGUI extends javax.swing.JPanel {
             return false;
         }
         if (!sl.matches("[0-9]+")) {
-            JOptionPane.showMessageDialog(this, "Số lượng chỉ được nhập số");
+            JOptionPane.showMessageDialog(this, "Số lượng chỉ được nhập chữ số");
             return false;
         }
         if (sl.length() > 7) {
@@ -799,11 +799,7 @@ public class SachGUI extends javax.swing.JPanel {
             }
         }
         int soLuong = Integer.parseInt(txtSoLuong.getText());
-        // Số lượng sách được thêm phải < 99 và > 0
-        if (soLuong <= 0 || soLuong >= 100) {
-            JOptionPane.showMessageDialog(this, "Số lượng sách phải lớn hơn 0 và nhỏ hơn 100");
-            return;
-        }
+
 //        int tt = SachDTO.TrangThaiSach.valueOf(cbTrangThai.getSelectedItem().toString()).ordinal();
         int k = 0;
         int loaiSachId = 0;
@@ -814,6 +810,18 @@ public class SachGUI extends javax.swing.JPanel {
         }
         SachDTO sachDTO = new SachDTO(id, tenSach, giaSach, soLuong, SachDTO.TrangThaiSach.DANG_NHAP_KHO.ordinal(), tacGiaId, nhaXuatBanId, loaiSachId);
         SachBUS sachBUS = new SachBUS();
+
+        sachBUS.findAll();
+        int tongSLTatCaSachTrongKho = 0;
+        for (SachDTO sachDTO1 : sachBUS.getListSach()) {
+            tongSLTatCaSachTrongKho += sachDTO1.getSoluong();
+        }
+
+        if (tongSLTatCaSachTrongKho + sachDTO.getSoluong() > 1000000) {
+            JOptionPane.showMessageDialog(this, "Tổng số lượng sách trong kho không được vượt quá 1,000,000");
+            return;
+        }
+
         sachBUS.insertone(sachDTO);
         setTableItemList();
         JOptionPane.showMessageDialog(this, "Thêm thành công");
@@ -968,7 +976,6 @@ public class SachGUI extends javax.swing.JPanel {
         }
         int sl = Integer.parseInt(txtSLSua.getText());
         int tt = SachDTO.TrangThaiSach.fromString(String.valueOf(txtTTSua.getSelectedItem())).ordinal();
-        int k = 0;
         int ls = 0;
         for (int i = 0; i < listLoaiSach.size(); i++) {
             if (listLoaiSach.get(i).getTenLoai().equalsIgnoreCase(String.valueOf(txtLSSua.getSelectedItem()))) {
@@ -976,6 +983,19 @@ public class SachGUI extends javax.swing.JPanel {
             }
         }
         SachBUS sachBUS = new SachBUS();
+
+
+        sachBUS.findAll();
+        int tongSLTatCaSachTrongKho = 0;
+        for (SachDTO sachDTO1 : sachBUS.getListSach()) {
+            tongSLTatCaSachTrongKho += sachDTO1.getSoluong();
+        }
+
+        if (tongSLTatCaSachTrongKho + sl > 1000000) {
+            JOptionPane.showMessageDialog(this, "Tổng số lượng sách trong kho không được vượt quá 1,000,000");
+            return;
+        }
+
         //Get a record with id
         SachDTO sachDTO = sachBUS.findone(id);
         //Change the record columns value
