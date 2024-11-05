@@ -357,38 +357,31 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jPanel8" alignment="1" max="32767" attributes="0"/>
-              <Group type="102" attributes="0">
+              <Component id="jPanel9" alignment="1" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel11" max="32767" attributes="0"/>
                       <Component id="jLabel10" max="32767" attributes="0"/>
-                      <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabel9" alignment="0" pref="106" max="32767" attributes="0"/>
                       <Component id="jLabel8" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jDateChooserNgayTraTimKiemFrom" pref="120" max="32767" attributes="0"/>
-                              <Component id="txtTienPhatTimKiemFrom" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btnXacNhanTimKiem" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jDateChooserNgayTraTimKiemFrom" min="-2" pref="120" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="jDateChooserNgayTraTimKiemTo" min="-2" pref="120" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jDateChooserNgayTraTimKiemTo" pref="120" max="32767" attributes="0"/>
-                              <Component id="txtTienPhatTimKiemTo" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="txtIDNguoiDocTimKiem" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtIDPhieuTimKiem" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="txtIDNguoiDocTimKiem" alignment="0" max="32767" attributes="0"/>
-                      <Component id="txtIDPhieuTimKiem" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="75" max="32767" attributes="0"/>
               </Group>
-              <Component id="jPanel9" alignment="1" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -397,16 +390,14 @@
                   <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                          <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="txtIDPhieuTimKiem" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Component id="txtIDNguoiDocTimKiem" min="-2" max="-2" attributes="0"/>
@@ -418,17 +409,11 @@
                               </Group>
                               <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtTienPhatTimKiemFrom" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="txtTienPhatTimKiemTo" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                          <Component id="btnXacNhanTimKiem" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="97" max="32767" attributes="0"/>
+                  <EmptySpace pref="31" max="32767" attributes="0"/>
                   <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -470,29 +455,10 @@
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="jDateChooserNgayTraTimKiemFrom">
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel11">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Ti&#x1ec1;n ph&#x1ea1;t kho&#x1ea3;ng t&#x1eeb;"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtTienPhatTimKiemFrom">
-        </Component>
         <Container class="javax.swing.JPanel" name="jPanel9">
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
-          <SubComponents>
-            <Component class="javax.swing.JButton" name="btnXacNhanTimKiem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="X&#xe1;c nh&#x1ead;n t&#xec;m ki&#x1ebf;m"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnXacNhanTimKiemActionPerformed"/>
-              </Events>
-            </Component>
-          </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="txtTienPhatTimKiemTo">
-        </Component>
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x110;&#x1ebf;n"/>
@@ -502,12 +468,13 @@
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="jDateChooserNgayTraTimKiemTo">
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel13">
+        <Component class="javax.swing.JButton" name="btnXacNhanTimKiem">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&#x110;&#x1ebf;n"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="inheritsPopupMenu" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" value="X&#xe1;c nh&#x1ead;n t&#xec;m ki&#x1ebf;m"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnXacNhanTimKiemActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

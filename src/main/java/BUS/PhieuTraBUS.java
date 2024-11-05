@@ -33,9 +33,9 @@ public class PhieuTraBUS {
         return null;
     }
 
-    public ArrayList<PhieuTraDTO> findMany(int id, long idNguoiDoc, java.util.Date ngayTraFrom, java.util.Date ngayTraTo, int tienPhatFrom, int tienPhatTo) {
+    public ArrayList<PhieuTraDTO> findMany(int id, long idNguoiDoc, java.util.Date ngayTraFrom, java.util.Date ngayTraTo) {
         try {
-            return PhieuTraDAO.findMany(id, idNguoiDoc, ngayTraFrom, ngayTraTo, tienPhatFrom, tienPhatTo);
+            return PhieuTraDAO.findMany(id, idNguoiDoc, ngayTraFrom, ngayTraTo);
         } catch (Exception e) {
             e.printStackTrace();
         }

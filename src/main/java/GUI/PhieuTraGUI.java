@@ -83,9 +83,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         txtTienPhatXem.setText("");
         //Dialog Tim kiem
         txtIDPhieuTimKiem.setText("");
-        txtTienPhatTimKiemFrom.setText("");
         txtIDNguoiDocTimKiem.setText("");
-        txtTienPhatTimKiemTo.setText("");
         jDateChooserNgayTraTimKiemFrom.setDate(null);
         jDateChooserNgayTraTimKiemTo.setDate(null);
     }
@@ -132,14 +130,10 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jDateChooserNgayTraTimKiemFrom = new com.toedter.calendar.JDateChooser();
-        jLabel11 = new javax.swing.JLabel();
-        txtTienPhatTimKiemFrom = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
-        btnXacNhanTimKiem = new javax.swing.JButton();
-        txtTienPhatTimKiemTo = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jDateChooserNgayTraTimKiemTo = new com.toedter.calendar.JDateChooser();
-        jLabel13 = new javax.swing.JLabel();
+        btnXacNhanTimKiem = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablePhieuTra = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -385,7 +379,9 @@ public class PhieuTraGUI extends javax.swing.JPanel {
 
         jLabel10.setText("Ngày trả");
 
-        jLabel11.setText("Tiền phạt khoảng từ");
+        jLabel12.setText("Đến");
+        jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel12.setInheritsPopupMenu(false);
 
         btnXacNhanTimKiem.setText("Xác nhận tìm kiếm");
         btnXacNhanTimKiem.addActionListener(new java.awt.event.ActionListener() {
@@ -393,46 +389,32 @@ public class PhieuTraGUI extends javax.swing.JPanel {
                 btnXacNhanTimKiemActionPerformed(evt);
             }
         });
-        jPanel9.add(btnXacNhanTimKiem);
-
-        jLabel12.setText("Đến");
-        jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel12.setInheritsPopupMenu(false);
-
-        jLabel13.setText("Đến");
-        jLabel13.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel13.setInheritsPopupMenu(false);
 
         javax.swing.GroupLayout jDialogTimKiemLayout = new javax.swing.GroupLayout(jDialogTimKiem.getContentPane());
         jDialogTimKiem.getContentPane().setLayout(jDialogTimKiemLayout);
         jDialogTimKiemLayout.setHorizontalGroup(
             jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jDialogTimKiemLayout.createSequentialGroup()
                 .addGap(69, 69, 69)
                 .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(47, 47, 47)
-                .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jDialogTimKiemLayout.createSequentialGroup()
-                        .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jDateChooserNgayTraTimKiemFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .addComponent(txtTienPhatTimKiemFrom))
-                        .addGap(26, 26, 26)
-                        .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnXacNhanTimKiem)
+                    .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jDialogTimKiemLayout.createSequentialGroup()
+                            .addComponent(jDateChooserNgayTraTimKiemFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(26, 26, 26)
                             .addComponent(jLabel12)
-                            .addComponent(jLabel13))
-                        .addGap(26, 26, 26)
-                        .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jDateChooserNgayTraTimKiemTo, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .addComponent(txtTienPhatTimKiemTo)))
-                    .addComponent(txtIDNguoiDocTimKiem)
-                    .addComponent(txtIDPhieuTimKiem))
+                            .addGap(26, 26, 26)
+                            .addComponent(jDateChooserNgayTraTimKiemTo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtIDNguoiDocTimKiem)
+                        .addComponent(txtIDPhieuTimKiem)))
                 .addContainerGap(75, Short.MAX_VALUE))
-            .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jDialogTimKiemLayout.setVerticalGroup(
             jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -440,15 +422,13 @@ public class PhieuTraGUI extends javax.swing.JPanel {
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(70, 70, 70)
                 .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jDialogTimKiemLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jDialogTimKiemLayout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addGap(27, 27, 27)
                         .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel10)
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel11))
-                    .addGroup(jDialogTimKiemLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel10))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jDialogTimKiemLayout.createSequentialGroup()
                         .addComponent(txtIDPhieuTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(21, 21, 21)
                         .addComponent(txtIDNguoiDocTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -458,13 +438,9 @@ public class PhieuTraGUI extends javax.swing.JPanel {
                                 .addComponent(jDateChooserNgayTraTimKiemFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jDateChooserNgayTraTimKiemTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel12))
-                        .addGap(18, 18, 18)
-                        .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTienPhatTimKiemFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jDialogTimKiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtTienPhatTimKiemTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel13)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                        .addGap(45, 45, 45)
+                        .addComponent(btnXacNhanTimKiem)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -727,9 +703,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         if (txtIDPhieuTimKiem.getText().isEmpty()
                 && txtIDNguoiDocTimKiem.getText().isEmpty()
                 && jDateChooserNgayTraTimKiemFrom.getDate() == null
-                && jDateChooserNgayTraTimKiemTo.getDate() == null
-                && txtTienPhatTimKiemFrom.getText().isEmpty()
-                && txtTienPhatTimKiemTo.getText().isEmpty()) {
+                && jDateChooserNgayTraTimKiemTo.getDate() == null) {
             JOptionPane.showMessageDialog(jDialogTimKiem, "Vui lòng ít nhất chọn 1 điều kiện");
             return;
         }
@@ -766,44 +740,9 @@ public class PhieuTraGUI extends javax.swing.JPanel {
             idNguoiDoc = Long.parseLong(txtIDNguoiDocTimKiem.getText());
         }
 
-        if (txtTienPhatTimKiemFrom.getText().isEmpty()) {
-            tienPhatFrom = -1;
-        } else {
-            if (txtTienPhatTimKiemFrom.getText().length() > 10) {
-                JOptionPane.showMessageDialog(jDialogTimKiem, "Tiền phạt không được vượt quá 10 ký tự");
-                return;
-            }
-
-            if (!Helpler.checkTextFieldNumber(txtTienPhatTimKiemFrom, "Tiền phạt", jDialogTimKiem)) {
-                return;
-            }
-
-            tienPhatFrom = Integer.parseInt(txtTienPhatTimKiemFrom.getText());
-        }
-
-        if (txtTienPhatTimKiemTo.getText().isEmpty()) {
-            tienPhatTo = -1;
-        } else {
-            if (txtTienPhatTimKiemTo.getText().length() > 10) {
-                JOptionPane.showMessageDialog(jDialogTimKiem, "Tiền phạt không được vượt quá 10 ký tự");
-                return;
-            }
-
-            if (!Helpler.checkTextFieldNumber(txtTienPhatTimKiemTo, "Tiền phạt", jDialogTimKiem)) {
-                return;
-            }
-            tienPhatTo = Integer.parseInt(txtTienPhatTimKiemTo.getText());
-        }
-
         Date ngayTraFrom = jDateChooserNgayTraTimKiemFrom.getDate();
         Date ngayTraTo = jDateChooserNgayTraTimKiemTo.getDate();
         // Check tien phat
-        if (tienPhatFrom != -1 && tienPhatTo != -1) {
-            if (tienPhatFrom >= tienPhatTo) {
-                JOptionPane.showMessageDialog(jDialogTimKiem, "Tiền phạt ko hợp lệ");
-                return;
-            }
-        }
         // Check date
         if (ngayTraFrom != null && ngayTraTo != null) {
             if (ngayTraFrom.after(ngayTraTo)) {
@@ -814,7 +753,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
         // Find many
         PhieuTraBUS phieuTraBUS = new PhieuTraBUS();
         ArrayList<PhieuTraDTO> listPhieuTra = phieuTraBUS.findMany(
-                idPhieu, idNguoiDoc, ngayTraFrom, ngayTraTo, tienPhatFrom, tienPhatTo
+                idPhieu, idNguoiDoc, ngayTraFrom, ngayTraTo
         );
         System.out.println(listPhieuTra);
         //Close
@@ -909,9 +848,7 @@ public class PhieuTraGUI extends javax.swing.JPanel {
     private javax.swing.JDialog jDialogXemChiTiet;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
@@ -941,8 +878,6 @@ public class PhieuTraGUI extends javax.swing.JPanel {
     private javax.swing.JTextField txtIDPhieuTimKiem;
     private javax.swing.JTextField txtIDPhieuXem;
     private javax.swing.JTextField txtIdPhieuMuon;
-    private javax.swing.JTextField txtTienPhatTimKiemFrom;
-    private javax.swing.JTextField txtTienPhatTimKiemTo;
     private javax.swing.JTextField txtTienPhatXem;
     // End of variables declaration//GEN-END:variables
 }

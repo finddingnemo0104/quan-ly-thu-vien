@@ -55,7 +55,7 @@ public class PhieuTraDAO {
         return listPhieuTra;
     }
 
-    public static ArrayList<PhieuTraDTO> findMany(int id, long idNguoiDoc, java.util.Date ngayTraFrom, java.util.Date ngayTraTo, int tienPhatFrom, int tienPhatTo) throws Exception {
+    public static ArrayList<PhieuTraDTO> findMany(int id, long idNguoiDoc, java.util.Date ngayTraFrom, java.util.Date ngayTraTo) throws Exception {
         ArrayList<PhieuTraDTO> listPhieuTra = new ArrayList<>();
         Connection con = MyConnection.getConnection();
         String queryFindMany = "" +
@@ -79,13 +79,6 @@ public class PhieuTraDAO {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String ngayTraThatSuTo = sdf.format(ngayTraTo);
             queries.add(String.format("ngayTraThatSu <= '%s' \n", ngayTraThatSuTo));
-        }
-        if (tienPhatFrom != -1) {
-            queries.add(String.format("tienPhat >= %d \n", tienPhatFrom));
-        }
-
-        if (tienPhatTo != -1) {
-            queries.add(String.format("tienPhat <= %d \n", tienPhatTo));
         }
 
         for (int i = 0; i < queries.size(); i++) {
