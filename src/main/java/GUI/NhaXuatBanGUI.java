@@ -650,30 +650,40 @@ public class NhaXuatBanGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnXacNhanTimActionPerformed
 
     private void btnXacNhanThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanThemActionPerformed
-        if (!checkTextField("them")) {
+       if (!checkTextField("them")) {
+        return;
+    }
+
+    int id = MyConnection.getLastRecordId(NhaXuatBanDTO.TABLE_NAME) + 1;
+    String sdt = txtSDT.getText();
+    String diaChi = txtDiaChi.getText();
+    String ten = txtTen.getText();
+
+    // Check if sdt already exists
+    NhaXuatBanBUS nhaXuatBanBUS = new NhaXuatBanBUS();
+    nhaXuatBanBUS.findAll();
+    for (NhaXuatBanDTO nhaXuatBanDTO : nhaXuatBanBUS.getListNhaXuatBan()) {
+        if (nhaXuatBanDTO.getSdt().equals(sdt)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại");
             return;
         }
-        int id = MyConnection.getLastRecordId(NhaXuatBanDTO.TABLE_NAME) + 1;
-        String sdt = txtSDT.getText();
-        String diaChi = txtDiaChi.getText();
-        String ten = txtTen.getText();
+    }
 
-        // check if sdt is already exist
-        NhaXuatBanBUS nhaXuatBanBUS = new NhaXuatBanBUS();
-        nhaXuatBanBUS.findAll();
-        for (NhaXuatBanDTO nhaXuatBanDTO : nhaXuatBanBUS.getListNhaXuatBan()) {
-            if (nhaXuatBanDTO.getSdt().equals(sdt)) {
-                JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại");
-                return;
-            }
-        }
+    // Create DTO and attempt to insert
+    NhaXuatBanDTO nhaXuatBanDTO = new NhaXuatBanDTO(id, ten, diaChi, sdt, txtEmail.getText());
+    boolean isInserted = nhaXuatBanBUS.insertOne(nhaXuatBanDTO);
 
-        NhaXuatBanDTO nhaXuatBanDTO = new NhaXuatBanDTO(id, ten, diaChi, sdt, txtEmail.getText());
-        nhaXuatBanBUS.insertOne(nhaXuatBanDTO);
-        setTableItemList();
-        clearAllTextField();
-        jDialogThem.setVisible(false);
-        JOptionPane.showMessageDialog(this, "Thêm thành công");
+    if (!isInserted) {
+        // Nếu thêm không thành công
+        JOptionPane.showMessageDialog(this, "Lỗi: Không thể thêm nhà xuất bản. Vui lòng kiểm tra lại!");
+        return;
+    }
+
+    // Nếu thêm thành công
+    setTableItemList(); // Cập nhật bảng
+    clearAllTextField(); // Xóa dữ liệu text field
+    jDialogThem.setVisible(false); // Đóng dialog
+    JOptionPane.showMessageDialog(this, "Thêm thành công");
 
     }//GEN-LAST:event_btnXacNhanThemActionPerformed
 

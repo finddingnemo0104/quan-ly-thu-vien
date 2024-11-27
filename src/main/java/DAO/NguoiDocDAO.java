@@ -131,7 +131,7 @@ public class NguoiDocDAO {
         return listNguoiDoc;
     }
 
-    public NguoiDocDTO findOne(long id) {
+    public  NguoiDocDTO findOne(long id) {
         NguoiDocDTO nguoiDocDTO = null;
         try {
             Connection con = MyConnection.getConnection();

@@ -699,32 +699,38 @@ public class PhieuTraGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnHienThiDanhSachTraActionPerformed
 
     private void btnXacNhanTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXacNhanTimKiemActionPerformed
-        // Check
-        if (txtIDPhieuTimKiem.getText().isEmpty()
-                && txtIDNguoiDocTimKiem.getText().isEmpty()
-                && jDateChooserNgayTraTimKiemFrom.getDate() == null
-                && jDateChooserNgayTraTimKiemTo.getDate() == null) {
-            JOptionPane.showMessageDialog(jDialogTimKiem, "Vui lòng ít nhất chọn 1 điều kiện");
+
+ if (txtIDPhieuTimKiem.getText().isEmpty()
+            && txtIDNguoiDocTimKiem.getText().isEmpty()
+            && jDateChooserNgayTraTimKiemFrom.getDate() == null
+            && jDateChooserNgayTraTimKiemTo.getDate() == null) {
+        JOptionPane.showMessageDialog(jDialogTimKiem, "Vui lòng ít nhất nhập 1 điều kiện tìm kiếm");
+        return;
+    }
+    int idPhieu, tienPhatFrom, tienPhatTo;
+    long idNguoiDoc;
+    if (txtIDPhieuTimKiem.getText().isEmpty()) {
+        idPhieu = -1;  // Default value if no ID is provided
+    } else {
+        // Check if the input is a valid number
+        if (!Helpler.checkTextFieldNumber(txtIDPhieuTimKiem, "ID phiếu", jDialogTimKiem)) {
             return;
         }
-        int idPhieu, tienPhatFrom, tienPhatTo;
-        long idNguoiDoc;
-        if (txtIDPhieuTimKiem.getText().isEmpty()) {
-            idPhieu = -1;
-        } else {
-            // id <= 256 characters
-            if (txtIDPhieuTimKiem.getText().length() > 256) {
-                JOptionPane.showMessageDialog(jDialogTimKiem, "ID phiếu không được vượt quá 256 ký tự");
-                return;
-            }
-
-            if (!Helpler.checkTextFieldNumber(txtIDPhieuTimKiem, "ID phiếu", jDialogTimKiem)) {
-                return;
-            }
-
+        try {
+            // Try parsing the input as an integer
             idPhieu = Integer.parseInt(txtIDPhieuTimKiem.getText());
+            
+            // Check if the number is greater than 0
+            if (idPhieu <= 0) {
+                JOptionPane.showMessageDialog(jDialogTimKiem, "ID phiếu phải lớn hơn 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            // Show error if input is not a valid number
+            JOptionPane.showMessageDialog(jDialogTimKiem, "ID phiếu phải là một số hợp lệ (không được vượt quá 10 chữ số theo kiểu int).");
+            return;
         }
-
+        }
         if (txtIDNguoiDocTimKiem.getText().isEmpty()) {
             idNguoiDoc = -1;
         } else {

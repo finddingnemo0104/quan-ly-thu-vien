@@ -137,7 +137,6 @@ public class SachGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Tên sách không được vượt quá 100 ký tự");
             return false;
         }
-
         // Kiểm tra trường giá
         if (isEmptyString(g)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập giá");

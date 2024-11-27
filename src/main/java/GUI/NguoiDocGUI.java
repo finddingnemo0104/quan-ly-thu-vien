@@ -94,6 +94,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             hoTen = txtHoTen1.getText();
             cmnd = txtCMND1.getText();
         }
+if (option.equalsIgnoreCase("Them")) {
         // Kiểm tra id
         if (isEmptyString(id)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập ID");
@@ -107,7 +108,6 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "ID phải 10 chữ số");
             return false;
         }
-
         // Kiểm tra họ tên
         if (isEmptyString(hoTen)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập họ tên");
@@ -118,7 +118,6 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Họ tên phải nhỏ hơn 256 ký tự");
             return false;
         }
-
         // Kiểm tra số điện thoại
         if (isEmptyString(sdt)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập SDT");
@@ -133,23 +132,19 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "SDT phải có 10 hoặc 11 số");
             return false;
         }
-
         // Kiểm tra ngày sinh
         if (ngaySinh == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập ngày sinh");
             return false;
         }
-
         if (!Helpler.isOlderThan18(ngaySinh)) {
             JOptionPane.showMessageDialog(this, "Ngày sinh phải lớn hơn 18 tuổi");
             return false;
         }
-
         if (!Helpler.isYoungerThan100(ngaySinh)) {
             JOptionPane.showMessageDialog(this, "Ngày sinh phải nhỏ hơn 100 tuổi");
             return false;
         }
-
         // Kiểm tra địa chỉ
         if (isEmptyString(diaChi)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ");
@@ -160,7 +155,6 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Địa chỉ phải nhỏ hơn 256 ký tự");
             return false;
         }
-
         // Kiểm tra CMND
         if (isEmptyString(cmnd)) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập CCCD");
@@ -175,6 +169,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "CCCD phải có 12 số");
             return false;
         }
+}
         return true;
     }
 
@@ -663,20 +658,23 @@ public class NguoiDocGUI extends javax.swing.JPanel {
         }
         JTextField textFields[] = {txtID, txtHoTen1, txtSDT1, null, txtDiaChi1, txtCMND1};
         // Id, Hoten, SDT, diaChi, CMND
-        for (int col = 0; col <= 5; col++) {
-            Object obj = jTableNguoiDoc.getValueAt(selectedRow, col);
-            if (col == 3) {
-                try {
-                    //NgaySinh
-                    txtNgaySinh1.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(obj.toString()));
-                    txtNgaySinh1.setDateFormatString("dd/MM/yyyy");
-                } catch (ParseException ex) {
-                    Logger.getLogger(NguoiDocGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                textFields[col].setText(obj.toString());
-            }
+       for (int col = 0; col <= 5; col++) {
+    Object obj = jTableNguoiDoc.getValueAt(selectedRow, col);
+    if (col == 3) {
+        try {
+            // NgaySinh
+            txtNgaySinh1.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(obj.toString()));
+            txtNgaySinh1.setDateFormatString("dd/MM/yyyy");
+        } catch (ParseException ex) {
+            Logger.getLogger(NguoiDocGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+    } else {
+        textFields[col].setText(obj.toString());
+    }
+}
+// Kiểm tra lại sau khi gán
+System.out.println("txtID after setting: " + txtID.getText());
+
         jDialogSua.setVisible(true);
         jDialogSua.setLocationRelativeTo(null);
 
@@ -687,7 +685,7 @@ public class NguoiDocGUI extends javax.swing.JPanel {
             return;
         }
         // Get value in text field
-        long id = Long.parseLong(txtID.getText());
+        long id = Long.parseLong(txtID.getText().trim());
         String sdt = txtSDT1.getText();
         LocalDate ngaySinh = convertToLocalDateViaMilisecond(txtNgaySinh1.getDate());
         String diaChi = txtDiaChi1.getText();

@@ -129,8 +129,7 @@ public class PhieuMuonDAO {
             prest.setLong(1, idNguoiDoc);
             ResultSet rs = prest.executeQuery();
             while (rs.next()) {
-                int id_pm = rs.getInt("id");
-                PhieuMuonDTO phieuMuonDTO = findOne(id_pm);
+                PhieuMuonDTO phieuMuonDTO = resultSetToPhieuMuonDTO(rs);
                 listPhieuMuon.add(phieuMuonDTO);
             }
             con.close();

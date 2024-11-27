@@ -23,27 +23,82 @@ public class NhaXuatBanDAO {
     }
 
 
-
-    public boolean insertOne(NhaXuatBanDTO nhaXuatBan) {
-        Connection con = null;
-        try{
-            con = MyConnection.getConnection();
-            String queryInsert = "INSERT INTO NHA_XUAT_BAN VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = con.prepareStatement(queryInsert);
-            ps.setInt(1, nhaXuatBan.getId());
-            ps.setString(2, nhaXuatBan.getTen());
-            ps.setString(3, nhaXuatBan.getDiaChi());
-            ps.setString(4, nhaXuatBan.getSdt());
-            ps.setString(5, nhaXuatBan.getEmail());
-
-            int c = ps.executeUpdate();
-            con.close();
-            return c !=0;
-        }  catch (Exception e) {
-            e.printStackTrace();
+public boolean insertOne(NhaXuatBanDTO nhaXuatBan) {
+    Connection con = null;
+    try {
+        // Kiểm tra dữ liệu đầu vào
+        String tenNhaXuatBan = nhaXuatBan.getTen() != null ? nhaXuatBan.getTen().trim() : "";
+        if (tenNhaXuatBan.isEmpty()) {
+            System.out.println("Lỗi: Tên nhà xuất bản không được để trống.");
+            return false;
         }
-        return false;
+        if (!tenNhaXuatBan.matches("^[\\p{L}\\s]+$")) {
+            System.out.println("Lỗi: Tên nhà xuất bản chỉ được chứa chữ cái và khoảng trắng.");
+            return false;
+        }
+        if (isNameExists(tenNhaXuatBan)) {
+            System.out.println("Lỗi: Tên nhà xuất bản đã tồn tại.");
+            return false;
+        }
+
+        // Kết nối cơ sở dữ liệu
+        con = MyConnection.getConnection();
+        String queryInsert = "INSERT INTO NHA_XUAT_BAN (id, ten, diachi, sdt, email) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement ps = con.prepareStatement(queryInsert);
+        ps.setInt(1, nhaXuatBan.getId());
+        ps.setString(2, nhaXuatBan.getTen());
+        ps.setString(3, nhaXuatBan.getDiaChi());
+        ps.setString(4, nhaXuatBan.getSdt());
+        ps.setString(5, nhaXuatBan.getEmail());
+
+        int c = ps.executeUpdate();
+        if (c > 0) {
+            System.out.println("Thêm nhà xuất bản thành công!");
+            return true;
+        } else {
+            System.out.println("Lỗi: Không thể thêm nhà xuất bản.");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (con != null) {
+                con.close(); // Đảm bảo đóng kết nối
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+    return false;
+}
+
+
+// Hàm kiểm tra tên nhà xuất bản đã tồn tại
+private boolean isNameExists(String tenNhaXuatBan) {
+    Connection con = null;
+    try {
+        con = MyConnection.getConnection();
+        String queryCheck = "SELECT COUNT(*) FROM NHA_XUAT_BAN WHERE TEN = ?";
+        PreparedStatement ps = con.prepareStatement(queryCheck);
+        ps.setString(1, tenNhaXuatBan.trim());
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Nếu số lượng > 0, tên đã tồn tại
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (con != null) {
+                con.close(); // Đóng kết nối
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    return false;
+}
+
 
     public ArrayList<NhaXuatBanDTO> findAll(){
         ArrayList<NhaXuatBanDTO> listNhaXuatBan = new ArrayList();

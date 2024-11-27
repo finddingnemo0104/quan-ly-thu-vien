@@ -24,7 +24,7 @@ public class MyConnection {
                     + "databaseName=QuanLyThuVien;"
                     + "encrypt=true; trustServerCertificate=true;";
             String username = "sa";
-            String password = "khongrotmon";
+            String password = "20112004";
             con = DriverManager.getConnection(dbUrl, username, password);
         }
         return con;
